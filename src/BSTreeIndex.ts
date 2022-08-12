@@ -9,15 +9,12 @@ export interface BSNodeLike<T> {
 }
 
 export class BSNode<T> implements BSNodeLike<T> {
-
   constructor(
     public parent: BSNode<T> | null = null,
     public value: T,
     public left: BSNode<T> | null = null,
-    public right: BSNode<T> | null = null,
-  ) {
-
-  }
+    public right: BSNode<T> | null = null
+  ) {}
 
   /**
    * @ignore
@@ -73,22 +70,18 @@ export class BSNode<T> implements BSNodeLike<T> {
     }
     const parent = this.parent;
     const grandParent = this.parent.parent;
-    return grandParent.left === parent
-      ? grandParent.right
-      : grandParent.left;
+    return grandParent.left === parent ? grandParent.right : grandParent.left;
   }
-
 }
 
 /**
  * Search for equal keys even when the binary search tree is not strictly
  * a binary search tree in the strict sense.
- * 
+ *
  * This function generally returns in `O(log(n))` time, but this might become
  * `O(n)` in the case where multiple elements with the same key are allowed.
  */
 export function equalKeysNoStrict<T, K>(tree: BST<T, K>, key: K) {
-
   const findMinEqual = (key: K, node: BSNode<T> | null): BSNode<T> | null => {
     if (node === null) {
       return null;
@@ -101,7 +94,7 @@ export function equalKeysNoStrict<T, K>(tree: BST<T, K>, key: K) {
       return findMinEqual(key, node.right);
     }
     return findMinEqual(key, node.left) || node;
-  }
+  };
 
   const findMaxEqual = (key: K, node: BSNode<T> | null): BSNode<T> | null => {
     if (node === null) {
@@ -115,7 +108,7 @@ export function equalKeysNoStrict<T, K>(tree: BST<T, K>, key: K) {
       return findMaxEqual(key, node.right);
     }
     return findMaxEqual(key, node.right) || node;
-  }
+  };
 
   const top = tree.findKey(key);
   const min = findMinEqual(key, top);
@@ -146,15 +139,12 @@ export function equalKeysStrict<T, K>(this: BST<T, K>, key: K): BSNodeRange<T> {
 }
 
 export class BSNodeRange<T> implements Range<T> {
-
   constructor(
     public min: BSNode<T> | null,
     public max: BSNode<T> | null,
     private nodeCount: number | undefined,
     public readonly reversed: boolean
-  ) {
-
-  }
+  ) {}
 
   public get size(): number {
     if (this.nodeCount === undefined) {
@@ -163,18 +153,13 @@ export class BSNodeRange<T> implements Range<T> {
       for (const node of this.cursors()) {
         count++;
       }
-      return this.nodeCount = count;
+      return (this.nodeCount = count);
     }
     return this.nodeCount;
   }
 
   public reverse() {
-    return new BSNodeRange(
-      this.min,
-      this.max,
-      this.nodeCount,
-      !this.reversed
-    )
+    return new BSNodeRange(this.min, this.max, this.nodeCount, !this.reversed);
   }
 
   public *cursors() {
@@ -204,11 +189,9 @@ export class BSNodeRange<T> implements Range<T> {
       yield node.value;
     }
   }
-
 }
 
 export interface BSTreeIndexOptions<T, K = T> {
-
   /**
    * An iterable that will be consumed to fill the collection.
    */
@@ -228,7 +211,6 @@ export interface BSTreeIndexOptions<T, K = T> {
    */
   getKey?: (elements: T) => K;
 
-
   /**
    * Used for checking two elements with the same key in the collection.
    */
@@ -241,14 +223,12 @@ export interface BSTreeIndexOptions<T, K = T> {
   onDuplicateKeys?: ResolveAction;
 
   onDuplicateElements?: ResolveAction;
-
 }
 
 /**
  * A base implementation of binary search trees.
  */
 export abstract class BST<T, K = T> implements SortedIndex<T, K> {
-
   protected elementCount = 0;
 
   protected root: BSNode<T> | null = null;
@@ -264,7 +244,8 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
     /**
      * A custom factory function for when a new tree node needs to be created.
      */
-    protected createNode: (value: T) => BSNode<T> = value => new BSNode(null, value)
+    protected createNode: (value: T) => BSNode<T> = (value) =>
+      new BSNode(null, value)
   ) {
     let elements: Iterable<T> = [];
     if (isIterable(opts)) {
@@ -295,7 +276,9 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
     if (this.areKeysEqual(parentKey, key)) {
       switch (this.onDuplicateKeys) {
         case ResolveAction.Error:
-          throw new Error(`The key ${key} already exists in this index and duplicates are not allowed.`);
+          throw new Error(
+            `The key ${key} already exists in this index and duplicates are not allowed.`
+          );
         case ResolveAction.Replace:
           parent.value = element;
           return [true, parent];
@@ -305,7 +288,9 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
       if (this.isEqual(element, parent.value)) {
         switch (this.onDuplicateElements) {
           case ResolveAction.Error:
-            throw new Error(`The element ${element} is already present in this index and duplicates are not allowed.`)
+            throw new Error(
+              `The element ${element} is already present in this index and duplicates are not allowed.`
+            );
           case ResolveAction.Replace:
             parent.value = element;
             return [true, parent];
@@ -339,7 +324,7 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
 
   public deleteAll(element: T): number {
     let deleteCount = 0;
-    for (const node of  this.equalKeys(this.getKey(element)).cursors()) {
+    for (const node of this.equalKeys(this.getKey(element)).cursors()) {
       if (this.isEqual(node.value, element)) {
         this.deleteAt(node);
         ++deleteCount;
@@ -350,7 +335,7 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
 
   public deleteKey(key: K): number {
     let deleteCount = 0;
-    for (const node of  this.equalKeys(key).cursors()) {
+    for (const node of this.equalKeys(key).cursors()) {
       this.deleteAt(node);
       ++deleteCount;
     }
@@ -446,7 +431,6 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
   }
 
   protected insertNode(node: BSNode<T>, hint?: BSNode<T> | null): boolean {
-
     const key = this.getKey(node.value);
 
     let currNode = hint !== undefined ? hint : this.root;
@@ -491,7 +475,10 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
       const keySmaller = this.isKeyLessThan(key, nodeKey);
       if (node.left !== null && keySmaller) {
         node = node.left;
-      } else if (node.right !== null && (this.isKeyLessThan(nodeKey, key) || !keySmaller)) {
+      } else if (
+        node.right !== null &&
+        (this.isKeyLessThan(nodeKey, key) || !keySmaller)
+      ) {
         node = node.right;
       } else {
         break;
@@ -499,7 +486,6 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
     }
     return node;
   }
-
 
   protected getSibling(node: BSNode<T>): BSNode<T> | null {
     if (node === null) {
@@ -538,12 +524,7 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
   }
 
   public toRange() {
-    return new BSNodeRange(
-      this.begin(), 
-      this.end(),
-      this.elementCount,
-      false
-    );
+    return new BSNodeRange(this.begin(), this.end(), this.elementCount, false);
   }
 
   public has(element: T): boolean {
@@ -587,7 +568,10 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
 
   public getGreatestLowerBound(key: K): BSNode<T> | null {
     let nearest = this.getNearest(key);
-    while (nearest !== null && this.isKeyLessThan(key, this.getKey(nearest.value))) {
+    while (
+      nearest !== null &&
+      this.isKeyLessThan(key, this.getKey(nearest.value))
+    ) {
       nearest = nearest.prev();
     }
     return nearest;
@@ -595,7 +579,10 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
 
   public getLeastUpperBound(key: K): BSNode<T> | null {
     let nearest = this.getNearest(key);
-    while (nearest !== null && this.isKeyLessThan(this.getKey(nearest.value), key)) {
+    while (
+      nearest !== null &&
+      this.isKeyLessThan(this.getKey(nearest.value), key)
+    ) {
       nearest = nearest.next();
     }
     return nearest;
@@ -610,15 +597,12 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
   }
 
   public deleteAt(node: BSNode<T>): void {
-
     while (true) {
-
       const parent = node.parent as BSNode<T>;
 
       // If `node` is a leaf node without any children, this means that we can
       // delete `node` and be done with it.
       if (node.left === null && node.right === null) {
-
         // This logic performs the actual deletion of `node`.
         if (node === this.root) {
           this.root = null;
@@ -633,11 +617,12 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
         // We just deleted a node so there is nothing more to do.
         break;
 
-      // If `node` only has one child, we can replace the node with that child
-      // and be done with it.
+        // If `node` only has one child, we can replace the node with that child
+        // and be done with it.
       } else if (node.left === null || node.right === null) {
-
-        const replacement = (node.left !== null ? node.left : node.right) as BSNode<T>;
+        const replacement = (
+          node.left !== null ? node.left : node.right
+        ) as BSNode<T>;
 
         // This logic performs the actual deletion of `node`.
         replacement.parent = parent;
@@ -653,28 +638,20 @@ export abstract class BST<T, K = T> implements SortedIndex<T, K> {
 
         // We just deleted a node so there is nothing more to do.
         break;
-
       } else {
-
         // Alternatively, we could have used this.getRightmost(node.left)
         const replacement = node.right.getLeftmost() as BSNode<T>;
         this.swapValues(node, replacement);
         node = replacement;
-
       }
-
     }
-
   }
 
   public begin(): BSNode<T> | null {
-    return this.root === null
-      ? null : this.root.getLeftmost();
+    return this.root === null ? null : this.root.getLeftmost();
   }
 
   public end(): BSNode<T> | null {
-    return this.root === null
-      ? null : this.root.getRightmost();
+    return this.root === null ? null : this.root.getRightmost();
   }
-
 }

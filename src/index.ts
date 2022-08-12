@@ -1,4 +1,3 @@
-
 export type {
   AddResult,
   Bag,
@@ -16,7 +15,7 @@ export type {
   Sequence,
   Set,
   SortedIndex,
-  Vec2
+  Vec2,
 } from "./interfaces";
 
 export {
@@ -29,19 +28,35 @@ export {
   isEqualTag,
   hash,
   hashTag,
-  Hasher
+  Hasher,
 } from "./util";
 
-export { DoubleLinkedList, DoubleLinkedListRange, DoubleLinkedListCursor } from "./DoubleLinkedList";
-export { SingleLinkedList, SingleLinkedListRange, SingleLinkedListCursor } from "./SingleLinkedList";
+export {
+  DoubleLinkedList,
+  DoubleLinkedListRange,
+  DoubleLinkedListCursor,
+} from "./DoubleLinkedList";
+export {
+  SingleLinkedList,
+  SingleLinkedListRange,
+  SingleLinkedListCursor,
+} from "./SingleLinkedList";
 export { Vector } from "./Vector";
 export { Stack } from "./Stack";
 export { Queue } from "./Queue";
 export { PriorityQueue, PriorityQueueOptions } from "./PriorityQueue";
 export { TreeIndex, TreeIndexOptions } from "./TreeIndex";
 export { NativeIndex, NativeIndexOptions } from "./NativeIndex";
-export { RBTreeIndex, RBTreeIndexOptions, RBTreeIndexCursor } from "./RBTreeIndex";
-export { AVLTreeIndex, AVLTreeIndexOptions, AVLTreeIndexCursor } from "./AVLTreeIndex";
+export {
+  RBTreeIndex,
+  RBTreeIndexOptions,
+  RBTreeIndexCursor,
+} from "./RBTreeIndex";
+export {
+  AVLTreeIndex,
+  AVLTreeIndexOptions,
+  AVLTreeIndexCursor,
+} from "./AVLTreeIndex";
 export { HashSet, HashSetCursor } from "./HashSet";
 export { HashIndex, HashIndexOptions, HashIndexCursor } from "./HashIndex";
 export { StringDict } from "./StringDict";
@@ -49,4 +64,3 @@ export { HashDict } from "./HashDict";
 export { HashMultiDict } from "./HashMultiDict";
 export { TreeDict } from "./TreeDict";
 export { TreeMultiDict } from "./TreeMultiDict";
-

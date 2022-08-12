@@ -1,5 +1,4 @@
-
-import { RBTreeMultiDict } from "./RBTreeMultiDict"
+import { RBTreeMultiDict } from "./RBTreeMultiDict";
 
 /**
  * A tree-based dictionary that can store multile items with the same key, but
@@ -59,8 +58,6 @@ import { RBTreeMultiDict } from "./RBTreeMultiDict"
  * @typeparam K The type of key of a given entry.
  * @typeparam V The type of value associated with the given key.
  */
-export class TreeMultiDict<K, V> extends RBTreeMultiDict<K, V> {
-
-}
+export class TreeMultiDict<K, V> extends RBTreeMultiDict<K, V> {}
 
 export default TreeMultiDict;

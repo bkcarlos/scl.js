@@ -1,4 +1,3 @@
-
 import { expect } from "chai";
 import { MultiDict } from "../interfaces";
 import { test } from "./_helpers";
@@ -53,28 +52,42 @@ import { test } from "./_helpers";
 //   expect([...dict.getValues(1)].sort((a, b) => a - b)).to.deep.equal([1, 3, 4]);
 // });
 
-test<MultiDict<number, number>>("MultiDict.add() allows adding pairs of the same key and value", dict => {
+test<
+  MultiDict<number, number>
+>("MultiDict.add() allows adding pairs of the same key and value", (dict) => {
   const res1 = dict.add([1, 2]);
   expect(res1[0]).to.be.true;
   const res2 = dict.add([1, 2]);
   expect(res2[0]).to.be.true;
-  expect([...dict]).to.deep.equal([[1, 2], [1, 2]]);
+  expect([...dict]).to.deep.equal([
+    [1, 2],
+    [1, 2],
+  ]);
 });
 
-test<MultiDict<number, number>>("MultiDict.emplace() allows adding pairs of the same key and value", dict => {
+test<
+  MultiDict<number, number>
+>("MultiDict.emplace() allows adding pairs of the same key and value", (dict) => {
   const res1 = dict.emplace(1, 2);
   expect(res1[0]).to.be.true;
   const res2 = dict.emplace(1, 2);
   expect(res2[0]).to.be.true;
-  expect([...dict]).to.deep.equal([[1, 2], [1, 2]]);
+  expect([...dict]).to.deep.equal([
+    [1, 2],
+    [1, 2],
+  ]);
 });
 
-test<MultiDict<number, number>>("MultiDict.getValues() correctly returns all values for a key", dict => {
+test<
+  MultiDict<number, number>
+>("MultiDict.getValues() correctly returns all values for a key", (dict) => {
   dict.add([1, 1]);
   dict.add([1, 3]);
   dict.add([1, 3]);
   dict.add([1, 4]);
   dict.add([2, 3]);
   dict.add([4, 5]);
-  expect([...dict.getValues(1)].sort((a, b) => a - b)).to.deep.equal([1, 3, 3, 4]);
+  expect([...dict.getValues(1)].sort((a, b) => a - b)).to.deep.equal([
+    1, 3, 3, 4,
+  ]);
 });

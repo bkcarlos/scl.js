@@ -1,13 +1,7 @@
 {
-  "entryPoints": [
-    "src/index.ts"
-  ],
-  "includes": [
-    "src"
-  ],
-  "exclude": [
-    "src/test"
-  ],
+  "entryPoints": ["src/index.ts"],
+  "includes": ["src"],
+  "exclude": ["src/test"],
   "theme": "minimal",
   "listInvalidSymbolLinks": true,
   "excludeExternals": true,

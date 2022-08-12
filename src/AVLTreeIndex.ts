@@ -1,5 +1,10 @@
-
-import { BSNode, BSNodeRange, BST, BSTreeIndexOptions, equalKeysNoStrict } from "./BSTreeIndex";
+import {
+  BSNode,
+  BSNodeRange,
+  BST,
+  BSTreeIndexOptions,
+  equalKeysNoStrict,
+} from "./BSTreeIndex";
 import { AddResult } from "./interfaces";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -8,22 +13,19 @@ import { Cursor } from "./interfaces";
 import { ResolveAction } from "./util";
 
 export class AVLNode<T> extends BSNode<T> {
-
   constructor(
     value: T,
     parent: AVLNode<T> | null = null,
     public left: AVLNode<T> | null = null,
-    public right: AVLNode<T> | null =  null,
+    public right: AVLNode<T> | null = null,
     public balance: number = 0
   ) {
     super(parent, value, left, right);
   }
-
 }
 
-export interface AVLTreeIndexOptions<T, K = T> extends BSTreeIndexOptions<T, K> {
-
-}
+export interface AVLTreeIndexOptions<T, K = T>
+  extends BSTreeIndexOptions<T, K> {}
 
 /**
  * A transparent [[Cursor]] that only works on the right AVL tree.
@@ -211,7 +213,6 @@ export type AVLTreeIndexCursor<T> = AVLNode<T>;
  * @typeparam K The type of key used to index
  */
 export class AVLTreeIndex<T, K = T> extends BST<T, K> {
-
   /**
    * Construct a new AVL tree index by providing a list of elements that should
    * be stored inside the index or a more complex object detailing e.g. how the
@@ -224,13 +225,13 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
    * @see [[AVLTreeIndexOptions]]
    */
   constructor(opts: Iterable<T> | AVLTreeIndexOptions<T, K> = {}) {
-    super(opts, value => new AVLNode(value));
+    super(opts, (value) => new AVLNode(value));
   }
 
   protected rotateLeft(node: AVLNode<T>): AVLNode<T> {
     const right = node.right!;
     if (right.balance === 0) {
-      node.balance  = +1;
+      node.balance = +1;
       right.balance = -1;
     } else {
       node.balance = 0;
@@ -293,7 +294,7 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
     return Y;
   }
 
-  protected rotateLeftThenRight(node: AVLNode<T>): AVLNode<T> { 
+  protected rotateLeftThenRight(node: AVLNode<T>): AVLNode<T> {
     const X = node;
     const Z = node.left!;
     const Y = Z.right!;
@@ -303,7 +304,7 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
     if (t2 !== null) {
       t2.parent = Z;
     }
-    Y.left =  Z;
+    Y.left = Z;
     Z.parent = Y;
     X.left = t3;
     if (t3 !== null) {
@@ -380,8 +381,10 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
    * @see [[delete]]
    */
   public add(element: T, hint?: unknown): AddResult<T> {
-
-    const [didInsert, insertedNode] = super.add(element, hint) as [boolean, AVLNode<T>];
+    const [didInsert, insertedNode] = super.add(element, hint) as [
+      boolean,
+      AVLNode<T>
+    ];
 
     if (!didInsert) {
       return [false, insertedNode];
@@ -398,19 +401,14 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
       parent !== null;
       parent = node.parent as AVLNode<T> | null
     ) {
-
       if (node === parent.right) {
-
         if (parent.balance > 0) {
-
           if (node.balance < 0) {
             this.rotateRightThenLeft(parent);
-          } else { 
+          } else {
             this.rotateLeft(parent);
           }
-
         } else {
-
           // If `parent` contained more nodes on the other side of where we
           // inserted, then the tree accidentally became balanced when the user
           // inserted the element. There is no more work to do.
@@ -423,19 +421,14 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
           node = parent;
           continue;
         }
-
       } else {
-
         if (parent.balance < 0) {
-
           if (node.balance > 0) {
-            this.rotateLeftThenRight(parent)
+            this.rotateLeftThenRight(parent);
           } else {
             this.rotateRight(parent);
           }
-
         } else {
-
           // If `parent` contained more nodes on the other side of where we
           // inserted, then the tree accidentally became balanced when the user
           // inserted the element. There is no more work to do.
@@ -448,11 +441,9 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
           node = parent;
           continue;
         }
-
       }
 
       break;
-
     }
 
     return [true, insertedNode];
@@ -490,7 +481,6 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
    * been done.
    */
   public deleteAt(node: AVLTreeIndexCursor<T>): void {
-
     this.elementCount--;
 
     while (true) {
@@ -508,7 +498,9 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
         }
         break;
       } else if (node.left === null || node.right === null) {
-        const replacement = (node.left !== null ? node.left : node.right) as AVLNode<T>;
+        const replacement = (
+          node.left !== null ? node.left : node.right
+        ) as AVLNode<T>;
         replacement.parent = parent;
         if (parent === null) {
           this.root = replacement;
@@ -527,20 +519,15 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
         node = replacement;
       }
     }
-
   }
 
-
   private retrace(N: AVLNode<T>) {
-
     for (
       let X = N.parent as AVLNode<T> | null;
       X !== null;
       X = N.parent as AVLNode<T> | null
     ) {
-
       if (N === X.left) {
-
         if (X.balance > 0) {
           const Z = X.right!;
           const oldBalance = Z.balance;
@@ -561,9 +548,7 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
           N.balance = 0;
           continue;
         }
-
       } else {
-
         if (X.balance < 0) {
           const Z = X.left!;
           const oldBalance = Z.balance;
@@ -584,11 +569,8 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
           N.balance = 0;
           continue;
         }
-
       }
-
     }
-
   }
 
   /**
@@ -614,16 +596,14 @@ export class AVLTreeIndex<T, K = T> extends BST<T, K> {
    */
   public clone() {
     return new AVLTreeIndex<T, K>({
-      compareKeys: this.isKeyLessThan
-    , getKey: this.getKey
-    , isEqual: this.isEqual
-    , onDuplicateKeys: this.onDuplicateKeys
-    , onDuplicateElements: this.onDuplicateElements
-    , elements: this
+      compareKeys: this.isKeyLessThan,
+      getKey: this.getKey,
+      isEqual: this.isEqual,
+      onDuplicateKeys: this.onDuplicateKeys,
+      onDuplicateElements: this.onDuplicateElements,
+      elements: this,
     });
   }
-
 }
 
 export default AVLTreeIndex;
-

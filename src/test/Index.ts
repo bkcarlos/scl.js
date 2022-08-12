@@ -1,41 +1,48 @@
-
 import { expect } from "chai";
-import { test } from "./_helpers"
+import { test } from "./_helpers";
 import { Index } from "../interfaces";
 
-import numbers1 from "./data/numbers1.json"
-import numbers2 from "./data/numbers2.json"
+import numbers1 from "./data/numbers1.json";
+import numbers2 from "./data/numbers2.json";
 import { checkInvariants } from "./invariants";
 import { Newable, ResolveAction } from "../util";
 
-test<Index<number>>("Index.add() correctly reports the element added on some random numbers", index => {
+test<
+  Index<number>
+>("Index.add() correctly reports the element added on some random numbers", (index) => {
   for (const num of numbers1) {
-    expect(index.has(num)).to.be.false
+    expect(index.has(num)).to.be.false;
     index.add(num);
-    expect(index.has(num)).to.be.true
+    expect(index.has(num)).to.be.true;
     checkInvariants(index);
   }
 });
 
-test<Index<number>>("Index.add() correctly reports the element added on an increasing sequence", index => {
+test<
+  Index<number>
+>("Index.add() correctly reports the element added on an increasing sequence", (index) => {
   for (let num = 0; num < 100; num++) {
-    expect(index.has(num)).to.be.false
+    expect(index.has(num)).to.be.false;
     index.add(num);
-    expect(index.has(num)).to.be.true
+    expect(index.has(num)).to.be.true;
     checkInvariants(index);
   }
 });
 
-test<Index<number>>("Index.add() correctly reports the element added on an decreasing sequence", index => {
+test<
+  Index<number>
+>("Index.add() correctly reports the element added on an decreasing sequence", (index) => {
   for (let num = 100; num >= 0; num--) {
-    expect(index.has(num)).to.be.false
+    expect(index.has(num)).to.be.false;
     index.add(num);
-    expect(index.has(num)).to.be.true
+    expect(index.has(num)).to.be.true;
     checkInvariants(index);
   }
-})
+});
 
-test("new Index.add() throws an error if duplicate keys are not allowed and the same key is added twice", (Index: Newable<Index<[number, number]>>) => {
+test("new Index.add() throws an error if duplicate keys are not allowed and the same key is added twice", (Index: Newable<
+  Index<[number, number]>
+>) => {
   const index = new Index({
     onDuplicateElement: ResolveAction.Error,
     onDuplicateKey: ResolveAction.Error,
@@ -52,35 +59,53 @@ test("new Index.add() throws an error if duplicate keys are not allowed and the 
   const e10: [number, number] = [2, 5];
   index.add(e1);
   expect(index.has(e1)).to.be.true;
-  expect(() => { index.add(e2) }).to.throw(Error);
+  expect(() => {
+    index.add(e2);
+  }).to.throw(Error);
   expect(index.has(e2)).to.be.false;
-  expect(() => { index.add(e3) }).to.throw(Error);
+  expect(() => {
+    index.add(e3);
+  }).to.throw(Error);
   expect(index.has(e3)).to.be.false;
-  expect(() => { index.add(e4) }).to.throw(Error);
+  expect(() => {
+    index.add(e4);
+  }).to.throw(Error);
   expect(index.has(e4)).to.be.false;
-  expect(() => { index.add(e5) }).to.throw(Error);
+  expect(() => {
+    index.add(e5);
+  }).to.throw(Error);
   expect(index.has(e5)).to.be.false;
   index.add(e6);
   expect(index.has(e6)).to.be.true;
-  expect(() => { index.add(e7) }).to.throw(Error);
+  expect(() => {
+    index.add(e7);
+  }).to.throw(Error);
   expect(index.has(e7)).to.be.false;
-  expect(() => { index.add(e8) }).to.throw(Error);
+  expect(() => {
+    index.add(e8);
+  }).to.throw(Error);
   expect(index.has(e8)).to.be.false;
-  expect(() => { index.add(e9) }).to.throw(Error);
+  expect(() => {
+    index.add(e9);
+  }).to.throw(Error);
   expect(index.has(e9)).to.be.false;
-  expect(() => { index.add(e10) }).to.throw(Error);
+  expect(() => {
+    index.add(e10);
+  }).to.throw(Error);
   expect(index.has(e10)).to.be.false;
-})
+});
 
-test<Index<number>>("Index.delete() correctly reports the element deleted on some random numbers", index => {
+test<
+  Index<number>
+>("Index.delete() correctly reports the element deleted on some random numbers", (index) => {
   for (const num of numbers1) {
     index.add(num);
   }
   checkInvariants(index);
   for (const num of numbers2) {
-    expect(index.has(num)).to.be.true
+    expect(index.has(num)).to.be.true;
     index.delete(num);
-    expect(index.has(num)).to.be.false
+    expect(index.has(num)).to.be.false;
     checkInvariants(index);
   }
 });

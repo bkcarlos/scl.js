@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { PriorityQueue } from "./PriorityQueue";
 
@@ -8,9 +7,8 @@ import { PriorityQueue } from "./PriorityQueue";
  * @typeparam T The type of element in the collection.
  */
 export interface Collection<T> {
-
   /**
-   * Returns a transparent object that can be used as an argument to {@link add} 
+   * Returns a transparent object that can be used as an argument to {@link add}
    * to speed up things. Generally, you don't have to use this method.
    */
   getAddHint?(element: T): any;
@@ -37,7 +35,7 @@ export interface Collection<T> {
    * @param element The element to check membership of.
    * @return True if the collections holds the given element, false otherwise.
    */
-  has(element: T): boolean
+  has(element: T): boolean;
 
   /**
    * Returns an object which is able to sift through the values in this collection.
@@ -46,12 +44,12 @@ export interface Collection<T> {
    * For unordered collections, the iteration order is unspecified and may even differ
    * between two iterations on the same collection.
    */
-  [Symbol.iterator](): IterableIterator<T>
+  [Symbol.iterator](): IterableIterator<T>;
 
   /**
    * @deprecated
    */
-  iterator?(): Iterator<T> 
+  iterator?(): Iterator<T>;
 
   /**
    * Count the amount of elements in the collection.
@@ -60,18 +58,18 @@ export interface Collection<T> {
    * cases where this can be an `O(n)` operation. Therefore, it is recommended
    * to always cache the result in a local variable.
    */
-  readonly size: number
+  readonly size: number;
 
   /**
    * Remove all elements from this collection, effectively setting the collection
    * to the empty collection.
    */
-  clear(): void
+  clear(): void;
 
   /**
    * Copies all elements in the collection to a new one of the same kind.
    */
-  clone(): Collection<T>
+  clone(): Collection<T>;
 
   /**
    * Remove the element pointed to by the iterator result from this collection.
@@ -98,7 +96,6 @@ export interface Collection<T> {
    * Converts the entire collection to a range.
    */
   toRange(): Range<T>;
-
 }
 
 export type AddResult<T> = [boolean, Cursor<T>];
@@ -107,7 +104,6 @@ export type AddResult<T> = [boolean, Cursor<T>];
  * Represents any collection that has an order defined on its elements.
  */
 export interface Sequence<T> extends Collection<T> {
-
   /**
    * Insert an element after the element at the given position. The position is
    * deduced from the iterator that is given to the method.
@@ -137,20 +133,20 @@ export interface Sequence<T> extends Collection<T> {
    *
    * @throws An error object if the collection is empty.
    */
-  first(): T 
+  first(): T;
 
   /**
    * Get the last element in the collection.
    *
    * @throws An error object if the collection is empty.
    */
-  last(): T
+  last(): T;
 
   /**
    * Return a cursor that is placed at the index given by `position` in the
    * sequence.
    */
-  at(position: number): Cursor<T>
+  at(position: number): Cursor<T>;
 
   /**
    * Allows taking an element directly out of the collection at a given position.
@@ -158,8 +154,7 @@ export interface Sequence<T> extends Collection<T> {
    * This method might be faster than {@link at} because it is not forced to
    * construct a cursor object.
    */
-  getAt(position: number): T
-
+  getAt(position: number): T;
 }
 
 /**
@@ -167,7 +162,6 @@ export interface Sequence<T> extends Collection<T> {
  * certain operations.
  */
 export interface Index<T, K = T> extends Collection<T> {
-
   /*
    * Returns a range of items that have the same key.
    */
@@ -176,7 +170,7 @@ export interface Index<T, K = T> extends Collection<T> {
   /**
    * Checks whether there a pair in this collection that has the given key.
    */
-  hasKey(key: K): boolean
+  hasKey(key: K): boolean;
 
   /**
    * Similar to `Dict.getValue`, except that it returns the pair that was
@@ -186,15 +180,13 @@ export interface Index<T, K = T> extends Collection<T> {
 
   /**
    * Delete a pair from the underlying collection that has the given key as key.
-   * 
+   *
    * Returns the amount of items that have been deleted.
    */
   deleteKey(key: K): number;
-
 }
 
 export interface SortedIndex<T, K = T> extends Index<T, K> {
-
   /**
    * Returns the value that is just below the given value, if any.
    */
@@ -210,7 +202,6 @@ export interface SortedIndex<T, K = T> extends Index<T, K> {
  * A cursor is a handle to a specific element in a collection.
  */
 export interface Cursor<T> {
-
   /**
    * A reference to the element pointed to by this cursor, as it was inserted
    * into the collection.
@@ -241,12 +232,11 @@ export interface Cursor<T> {
   next?(): Cursor<T> | null;
 
   /**
-   * Get a reference to the cursor that is immediately before to this one. 
+   * Get a reference to the cursor that is immediately before to this one.
    *
    * If the collection does not specify an order, this method will not exist.
    */
   prev?(): Cursor<T> | null;
-
 }
 
 /**
@@ -257,7 +247,6 @@ export interface Cursor<T> {
  * elements in the range before adding or removing elements.
  */
 export interface Range<T> {
-
   /**
    * Get how many elements are in this range.
    *
@@ -272,7 +261,7 @@ export interface Range<T> {
   [Symbol.iterator](): IterableIterator<T>;
 
   /**
-   * Return an iterator that provides cursors to inspect or delete the given element. 
+   * Return an iterator that provides cursors to inspect or delete the given element.
    *
    * @see  {@link Cursor}
    */
@@ -300,7 +289,6 @@ export interface Range<T> {
    * well-defined, such as the elements in a list or a tree-based dictionary.
    */
   reverse?(): Range<T>;
-
 }
 
 /**
@@ -308,26 +296,22 @@ export interface Range<T> {
  * elements, but contrary to a set it can hold multiple values of the same
  * kind.
  */
-export interface Bag<T> extends Index<T> {
-
-}
+export interface Bag<T> extends Index<T> {}
 
 /**
  * Simple sugar for an array-based pair. Used by dictionaries to denote the
  * actual value that is stored in the collection.
  */
-export type Pair<K, V> = [K, V]
+export type Pair<K, V> = [K, V];
 
 /**
  * Base interface for `Dict` and `MultiDict`.
  */
 export interface DictLike<K, V> extends Index<[K, V], K> {
-
   /**
    * Creates a new pair and inserts it in the underlying collection.
    */
   emplace(key: K, value: V): [boolean, Cursor<[K, V]>];
-
 }
 
 /**
@@ -336,41 +320,39 @@ export interface DictLike<K, V> extends Index<[K, V], K> {
  * value when given the key.
  */
 export interface Dict<K, V> extends DictLike<K, V> {
-
   /**
    * Get the value that is associated with the given key.
    */
   getValue(key: K): V | undefined;
-
 }
 
 /**
  * @experimental
  */
-export type Vec2 = [number, number]
+export type Vec2 = [number, number];
 
 /**
  * @experimental
  */
 export interface Grid<T> {
-  width: number
-  height: number
-  get(point: Vec2): T
-  set(point: Vec2, val: T): void
-  delete(point: Vec2): void
-  has(point: Vec2): boolean
+  width: number;
+  height: number;
+  get(point: Vec2): T;
+  set(point: Vec2, val: T): void;
+  delete(point: Vec2): void;
+  has(point: Vec2): boolean;
 }
 
 /**
  * A list is a positional collection which can contain multiple elements of the
- * same kind. 
+ * same kind.
  *
  * A list is characterized by low-cost insertion of elements, while
  * referencing an element at a given position is generally slower.
- * 
+ *
  * ```ts
  * const myList = new DoubleLinkedList();
- * 
+ *
  * myList.append(1);
  * myList.append(2);
  * myList.append(3);
@@ -379,7 +361,7 @@ export interface Grid<T> {
  *   console.log(num)
  * }
  * ```
- * 
+ *
  * Result:
  *
  * <pre>
@@ -391,12 +373,10 @@ export interface Grid<T> {
  * @typeparam T The type of element in the list.
  */
 export interface List<T> extends Sequence<T> {
-
   /**
    * Get the rest of the list. This operation usually is in <code>O(1)</code>.
    */
-  rest(): List<T>
-
+  rest(): List<T>;
 }
 
 /**
@@ -404,12 +384,10 @@ export interface List<T> extends Sequence<T> {
  * with many values.
  */
 export interface MultiDict<K, V> extends DictLike<K, V> {
-
   /**
    * Get all values that are associated with the given key.
    */
   getValues(key: K): IterableIterator<V>;
-
 }
 
 /**
@@ -422,14 +400,14 @@ export interface Queuelike<T> extends Collection<T> {
    *
    * @see Queuelike.pop()
    */
-  peek(): T | undefined
+  peek(): T | undefined;
   /**
    * Get the next element in the order defined by the queue and remove it
    * from the collection.
    *
    * @see Queuelike.peek()
    */
-  pop(): T | undefined
+  pop(): T | undefined;
 }
 
 /**
@@ -438,6 +416,4 @@ export interface Queuelike<T> extends Collection<T> {
  *
  * @see [[Dict]]
  */
-export interface Set<T> extends Index<T> {
-
-}
+export interface Set<T> extends Index<T> {}

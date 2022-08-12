@@ -1,5 +1,11 @@
 import { AddResult, Index } from "./interfaces";
-import { BST, BSNode, BSTreeIndexOptions, equalKeysNoStrict, BSNodeRange } from "./BSTreeIndex"
+import {
+  BST,
+  BSNode,
+  BSTreeIndexOptions,
+  equalKeysNoStrict,
+  BSNodeRange,
+} from "./BSTreeIndex";
 
 export const enum RBColor {
   Red,
@@ -7,23 +13,19 @@ export const enum RBColor {
 }
 
 export class RBNode<T> extends BSNode<T> {
-
   constructor(
     parentNode: RBNode<T> | null,
     value: T,
     left: RBNode<T> | null = null,
     right: RBNode<T> | null = null,
-    public color: RBColor = RBColor.Red,
+    public color: RBColor = RBColor.Red
   ) {
     super(parentNode, value, left, right);
   }
-
 }
 
-
-export interface RBTreeIndexOptions<T, K = T> extends BSTreeIndexOptions<T, K> {
-
-}
+export interface RBTreeIndexOptions<T, K = T>
+  extends BSTreeIndexOptions<T, K> {}
 
 /**
  * A transparent [[Cursor]] that only works on the right RB tree.
@@ -209,7 +211,6 @@ export type RBTreeIndexCursor<T> = RBNode<T>;
  * @typeparam K The type of key used to index
  */
 export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
-
   /**
    * Construct a new red-black tree index by providing a list of elements that should
    * be stored inside the index or a more complex object detailing e.g. how the
@@ -222,7 +223,7 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
    * @see [[RBTreeIndexOptions]]
    */
   constructor(opts: Iterable<T> | RBTreeIndexOptions<T, K> = {}) {
-    super(opts, value => new RBNode<T>(null, value));
+    super(opts, (value) => new RBNode<T>(null, value));
   }
 
   /**
@@ -253,7 +254,6 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
    * @see [[delete]]
    */
   public add(element: T, hint?: unknown): AddResult<T> {
-
     const [didInsert, node] = super.add(element, hint) as [boolean, RBNode<T>];
 
     if (!didInsert) {
@@ -266,12 +266,9 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
   }
 
   private fixRedRed(node: RBNode<T>): void {
-
     // We only have to loop for as long as there is a parent node that shares
     // the same red color with the child node being visited.
-    while (node !== this.root
-        && node.color === RBColor.Red) {
-
+    while (node !== this.root && node.color === RBColor.Red) {
       // We know the parentNode must exist because `node` wasn't the root node.
       const parent = node.parent as RBNode<T>;
 
@@ -305,9 +302,7 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
       // right after it.
 
       if (grandParent.left === parent) {
-
         if (node === parent.right) {
-
           // The uncle is stored in grandParent.right. After this iteration, we
           // should have performed a left rotation followed by a right rotation.
           // The first rotation is done here, while the second rotation is
@@ -326,9 +321,7 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
           // equal amount of black nodes, the path from `node` to `uncle` has to
           // contain a red node. This can only be `grandParent`.
           grandParent.color = RBColor.Red;
-
         } else {
-
           // We know that `grandParent` was initially black because otherwise
           // the tree would have been invalid before insertion. Since, `parent`
           // and `grandParent` are swapped, we have to set `grandParent` to
@@ -343,11 +336,8 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
         }
 
         this.rotateRight(grandParent);
-
       } else {
-
         if (node === parent.left) {
-
           // The uncle is stored in grandParent.left. After this iteration, we
           // should have performed a left rotation followed by a right rotation.
           // The first rotation is done here, while the second rotation is
@@ -365,9 +355,7 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
           // equal amount of black nodes, the path from `node` to `uncle` has to
           // contain a red node. This can only be `grandParent`.
           grandParent.color = RBColor.Red;
-
         } else {
-
           // `node` will be our new grandparent, so we pick the same color that
           // `grandParent` had when we started this iteration. We know that
           // `grandParent` was initially black because otherwise the tree would
@@ -380,11 +368,9 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
           // equal amount of black nodes, the path from `parent` to `uncle` has to
           // contain a red node. This can only be `grandParent`.
           grandParent.color = RBColor.Red;
-
         }
 
         this.rotateLeft(grandParent);
-
       }
 
       // Tree has been fixed. The case where we need to fix the parent node has
@@ -409,18 +395,15 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
    * been done.
    */
   public deleteAt(node: RBNode<T>): void {
-
     this.elementCount--;
 
     while (true) {
-
       const parent = node.parent as RBNode<T>;
 
       // If `node` is a leaf node without any children, this means that we can
       // delete `node` and be done with it. We just need to make sure our
       // coloring remains correct.
       if (node.left === null && node.right === null) {
-
         // If `node` is black, then 'replacing' it with a null node results in
         // a double-black because null counts as black. Therefore, we need to
         // fix the tree. We can't start with the parent of `node` because
@@ -444,12 +427,13 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
         // nothing more to do.
         break;
 
-      // If `node` only has one child, we can replace the node with that child
-      // and be done with it. As with the previous case, we need some extra
-      // logic to ensure coloring remains correct.
+        // If `node` only has one child, we can replace the node with that child
+        // and be done with it. As with the previous case, we need some extra
+        // logic to ensure coloring remains correct.
       } else if (node.left === null || node.right === null) {
-
-        const replacement = (node.left !== null ? node.left : node.right) as RBNode<T>;
+        const replacement = (
+          node.left !== null ? node.left : node.right
+        ) as RBNode<T>;
 
         // This logic performs the actual deletion of `node`.
         replacement.parent = parent;
@@ -467,16 +451,15 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
         // are red. Note that u and v cannot both be red at the same time due
         // to the way we constructed our tree.
         if (replacement.color === RBColor.Red || node.color === RBColor.Red) {
-
           // If `replacement` was red, changing it to black will ensure the
           // shrunk tree still has equal amount of black nodes when compared with
           // the sibling of `node`. If `node` itself was red, then swapping
           // it with its black replacement will have the same effect.
           replacement.color = RBColor.Black;
 
-        // The only case remaining is the case where `node` and `replacement`
-        // are double-black. In this case, we need to fix the tree starting
-        // at `node`'s location, which now is `replacement`.
+          // The only case remaining is the case where `node` and `replacement`
+          // are double-black. In this case, we need to fix the tree starting
+          // at `node`'s location, which now is `replacement`.
         } else {
           this.fixDoubleBlack(replacement);
         }
@@ -484,24 +467,17 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
         // We just deleted a node and our coloring is correct so there is
         // nothing more to do.
         break;
-
       } else {
-
         // Alternatively, we could have used this.getRightmost(node.left)
         const replacement = node.right.getLeftmost() as RBNode<T>;
         this.swapValues(node, replacement);
         node = replacement;
-
       }
-
     }
-
   }
 
   private fixDoubleBlack(node: RBNode<T>): void {
-
     while (node !== this.root) {
-
       const sibling = this.getSibling(node) as RBNode<T> | null;
 
       // We may take the non-nullable parent of `node` because the loop
@@ -524,9 +500,8 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
       // trigger the case where the sibling is completely black and the parent
       // is red. If so, the iteration would be done.
       if (sibling.color === RBColor.Red) {
-
         if (parent.right === sibling) {
-          this.rotateLeft(parent)
+          this.rotateLeft(parent);
         } else {
           this.rotateRight(parent);
         }
@@ -540,12 +515,13 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
         // children.
         sibling.color = RBColor.Black;
 
-      // Second case is when sibling node is black and both of its children are
-      // black too.
-      } else if (sibling.color === RBColor.Black
-            && (siblingLeft === null || siblingLeft.color === RBColor.Black)
-            && (siblingRight === null || siblingRight.color === RBColor.Black)) {
-
+        // Second case is when sibling node is black and both of its children are
+        // black too.
+      } else if (
+        sibling.color === RBColor.Black &&
+        (siblingLeft === null || siblingLeft.color === RBColor.Black) &&
+        (siblingRight === null || siblingRight.color === RBColor.Black)
+      ) {
         // In order to fix the double black, we color the sibling red. Now
         // there's one black less in the path passing through the sibling,
         // which makes the path compatible with the path to the node that was
@@ -564,28 +540,27 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
         // broken parent node.
         node = parent;
 
-      // Third case is when sibling is black but it has at least one child that
-      // is red. We don't have to check whether this really is the case
-      // because all other cases have already been handled.
+        // Third case is when sibling is black but it has at least one child that
+        // is red. We don't have to check whether this really is the case
+        // because all other cases have already been handled.
       } else {
-
         // We can make this variable non-nullable because we know the red child
         // must exist and `null` counts as a black node.
-        const redChild = (siblingLeft !== null && siblingLeft.color === RBColor.Red ? sibling.left! : sibling.right) as RBNode<T>;
+        const redChild = (
+          siblingLeft !== null && siblingLeft.color === RBColor.Red
+            ? sibling.left!
+            : sibling.right
+        ) as RBNode<T>;
 
         if (sibling === parent.right) {
-
           if (redChild === sibling.left) {
-
             this.rotateRight(sibling);
 
             // We will have done two rotations by the end of this iteration,
             // after which `redChild` will have become the new parent node. We
             // simply copy the color of the parent into our child.
             redChild.color = parent.color;
-
           } else {
-
             // The red child's parent named `sibling` could only be black in
             // order to keep the tree valid, so given that `redChild` takes the
             // place of its parent, it should also take its black color.
@@ -595,24 +570,18 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
             // whatever value it has over to our new parent node named
             // `sibling`.
             sibling.color = parent.color;
-
           }
 
           this.rotateLeft(parent);
-
         } else {
-
           if (redChild === sibling.right) {
-
             this.rotateLeft(sibling);
 
             // We will have done two rotations by the end of this iteration,
             // after which `redChild` will have become the new parent node. We
             // simply copy the color of the parent into our child.
             redChild.color = parent.color;
-
           } else {
-
             // The red child's parent named `sibling` could only be black in
             // order to keep the tree valid, so given that `redChild` takes the
             // place of its parent, it should also take its black color.
@@ -622,11 +591,9 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
             // whatever value it has over to our new parent node named
             // `sibling`.
             sibling.color = parent.color;
-
           }
 
           this.rotateRight(parent);
-
         }
 
         // No matter if LL, LR, RL or RR, `parent` takes the place of our
@@ -635,11 +602,8 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
         parent.color = RBColor.Black;
 
         break;
-
       }
-
     }
-
   }
 
   /**
@@ -691,9 +655,8 @@ export class RBTreeIndex<T, K = T> extends BST<T, K> implements Index<T, K> {
       elements: this,
       compareKeys: this.isKeyLessThan,
       getKey: this.getKey,
-    })
+    });
   }
-
 }
 
 export default RBTreeIndex;

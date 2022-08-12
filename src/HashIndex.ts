@@ -1,7 +1,14 @@
-
 import { Cursor, Index, AddResult, Range } from "./interfaces";
 import { DoubleLinkedList, DoubleLinkedListCursor } from "./DoubleLinkedList";
-import { getKey as defaultGetKey, EmptyRange, isEqual, RangeBase, hash, ResolveAction, isIterable } from "./util";
+import {
+  getKey as defaultGetKey,
+  EmptyRange,
+  isEqual,
+  RangeBase,
+  hash,
+  ResolveAction,
+  isIterable,
+} from "./util";
 
 /**
  * @ignore
@@ -9,10 +16,10 @@ import { getKey as defaultGetKey, EmptyRange, isEqual, RangeBase, hash, ResolveA
 export type Bucket<T> = DoubleLinkedList<T>;
 
 export class HashIndexCursor<T> implements Cursor<T> {
-
-  constructor(public _bucket: Bucket<T>, public _bucketPos: DoubleLinkedListCursor<T>) {
-
-  }
+  constructor(
+    public _bucket: Bucket<T>,
+    public _bucketPos: DoubleLinkedListCursor<T>
+  ) {}
 
   public get value(): T {
     return this._bucketPos.value;
@@ -21,13 +28,11 @@ export class HashIndexCursor<T> implements Cursor<T> {
   public set value(newVal: T) {
     this._bucketPos.value = newVal;
   }
-
 }
 
 const DEFAULT_BUCKET_COUNT = 255;
 
 class FullHashRange<T, K> extends RangeBase<T> {
-
   constructor(protected _hash: HashIndex<T, K>) {
     super();
   }
@@ -50,16 +55,17 @@ class FullHashRange<T, K> extends RangeBase<T> {
     for (const bucket of this._hash._array) {
       if (bucket !== undefined) {
         for (const cursor of bucket.toRange().cursors()) {
-          yield new HashIndexCursor(bucket, cursor as DoubleLinkedListCursor<T>);
+          yield new HashIndexCursor(
+            bucket,
+            cursor as DoubleLinkedListCursor<T>
+          );
         }
       }
     }
   }
-
 }
 
 export interface HashIndexOptions<T, K = T> {
-
   /**
    * An iterable that will be consumed to fill the index.
    */
@@ -90,11 +96,11 @@ export interface HashIndexOptions<T, K = T> {
    *
    * If omitted, the [[isEqual built-in equality function]] will be used.
    */
-  elementsEqual?: (a: T, b: T) => boolean
+  elementsEqual?: (a: T, b: T) => boolean;
 
   /**
    * A function that should extract the key out of an element.
-   * 
+   *
    * For example, dictionaries simply take the first element of a tuple array
    * to be the key.
    */
@@ -107,14 +113,14 @@ export interface HashIndexOptions<T, K = T> {
 
   /**
    * What to do when the key of the element being added already exists in the index.
-   * 
+   *
    * This property defaults to [[ResolveAction.Error]].
    */
   onDuplicateKeys?: ResolveAction;
 
   /**
    * What to do when the the element being added already exists in the index.
-   * 
+   *
    * This property defaults to [[ResolveAction.Error]].
    */
   onDuplicateElements?: ResolveAction;
@@ -175,7 +181,6 @@ export interface HashIndexOptions<T, K = T> {
  * @see [[RBTreeIndex]] for when the elements have to be sorted and there are frequent mutations
  */
 export class HashIndex<T, K = T> implements Index<T, K> {
-
   /**
    * @ignore
    */
@@ -186,9 +191,9 @@ export class HashIndex<T, K = T> implements Index<T, K> {
    */
   protected elementCount = 0;
 
-  protected getHash: (element: K) => number
-  protected keysEqual: (a: K, b: K) => boolean
-  protected elementsEqual: (a: T, b: T) => boolean
+  protected getHash: (element: K) => number;
+  protected keysEqual: (a: K, b: K) => boolean;
+  protected elementsEqual: (a: T, b: T) => boolean;
   protected getKey: (value: T) => K;
 
   protected onDuplicateKeys: ResolveAction;
@@ -199,7 +204,7 @@ export class HashIndex<T, K = T> implements Index<T, K> {
    */
   constructor(opts: HashIndexOptions<T, K> = {}) {
     if (isIterable(opts)) {
-      opts = { elements: opts }
+      opts = { elements: opts };
     }
     this.keysEqual = opts.keysEqual ?? isEqual;
     this.elementsEqual = opts.elementsEqual ?? isEqual;
@@ -231,30 +236,37 @@ export class HashIndex<T, K = T> implements Index<T, K> {
     }
     return bucket
       .toRange()
-      .filter((cursor: Cursor<T>) => this.keysEqual(this.getKey(cursor.value), key));
+      .filter((cursor: Cursor<T>) =>
+        this.keysEqual(this.getKey(cursor.value), key)
+      );
   }
 
   public add(element: T): AddResult<T> {
     const key = this.getKey(element);
     const h = this.getHash(key);
     const i = h % this._array.length;
-    const bucket = this._array[i] === undefined
-      ? this._array[i] = new DoubleLinkedList<T>()
-      : this._array[i];
+    const bucket =
+      this._array[i] === undefined
+        ? (this._array[i] = new DoubleLinkedList<T>())
+        : this._array[i];
     for (const position of bucket.toRange().cursors()) {
       if (this.keysEqual(this.getKey(position.value), key)) {
         switch (this.onDuplicateKeys) {
           case ResolveAction.Error:
-            throw new Error(`The key ${key} already exists in this index and duplicates are not allowed.`);
+            throw new Error(
+              `The key ${key} already exists in this index and duplicates are not allowed.`
+            );
           case ResolveAction.Replace:
             position.value = element;
           case ResolveAction.Ignore:
-            return [false, new HashIndexCursor(bucket, position)]
+            return [false, new HashIndexCursor(bucket, position)];
         }
         if (this.elementsEqual(position.value, element)) {
           switch (this.onDuplicateElements) {
             case ResolveAction.Error:
-              throw new Error(`The element ${element} is already present in this index and duplicates are not allowed.`)
+              throw new Error(
+                `The element ${element} is already present in this index and duplicates are not allowed.`
+              );
             case ResolveAction.Replace:
               position.value = element;
             case ResolveAction.Ignore:
@@ -372,10 +384,9 @@ export class HashIndex<T, K = T> implements Index<T, K> {
       getKey: this.getKey,
       keysEqual: this.keysEqual,
       onDuplicateElements: this.onDuplicateElements,
-      onDuplicateKeys: this.onDuplicateKeys
-    })
+      onDuplicateKeys: this.onDuplicateKeys,
+    });
   }
-
 }
 
 export default HashIndex;

@@ -1,10 +1,7 @@
 import { AddResult, Cursor, Index, MultiDict, Range } from "./interfaces";
 
 export abstract class MultiDictBase<K, V> implements MultiDict<K, V> {
-
-  constructor(protected index: Index<[K, V], K>) {
-
-  }
+  constructor(protected index: Index<[K, V], K>) {}
 
   public equalKeys(key: K): Range<[K, V]> {
     return this.index.equalKeys(key);
@@ -70,5 +67,4 @@ export abstract class MultiDictBase<K, V> implements MultiDict<K, V> {
   public toRange(): Range<[K, V]> {
     return this.index.toRange();
   }
-
 }

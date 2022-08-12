@@ -1,12 +1,9 @@
-
 import Heap, { HeapOptions } from "./Heap";
 import { Queuelike } from "./interfaces";
 import { isIterable, lessThan as defaultLessThan } from "./util";
 import { Vector, VectorCursor } from "./Vector";
 
-export interface PriorityQueueOptions<T> extends HeapOptions<T> {
-
-}
+export interface PriorityQueueOptions<T> extends HeapOptions<T> {}
 
 /**
  * A queue that pops element based on their given priority.
@@ -28,15 +25,14 @@ export interface PriorityQueueOptions<T> extends HeapOptions<T> {
  * | {@link PriorityQueue.peek peek()}     | O(1)       |
  * | {@link PriorityQueue.pop pop()}       | O(log(n))  |
  * | {@link PriorityQueue.size size}       | O(1)       |
- * 
+ *
  * ## Examples
- * 
- * 
+ *
+ *
  * @see [[Queue]]
  * @see [[Stack]]
  */
 export class PriorityQueue<T> implements Queuelike<T> {
-
   protected heap: Heap<T>;
 
   /**
@@ -56,17 +52,17 @@ export class PriorityQueue<T> implements Queuelike<T> {
       return;
     }
     if (isIterable(opts)) {
-      opts = { elements: opts }
+      opts = { elements: opts };
     }
     const {
       elements = [],
       allocStep,
       capacity,
-      compare = defaultLessThan
+      compare = defaultLessThan,
     } = opts;
     const vector = new Vector<T>({
       allocStep,
-      capacity
+      capacity,
     });
     this.heap = new Heap<T>(vector, compare);
     for (const element of elements) {
@@ -132,7 +128,6 @@ export class PriorityQueue<T> implements Queuelike<T> {
   public clone(): PriorityQueue<T> {
     return new PriorityQueue<T>(this.heap.clone());
   }
-
 }
 
 export default PriorityQueue;

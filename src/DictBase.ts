@@ -1,11 +1,7 @@
-
-import { AddResult, Cursor, Dict, Index, Range } from "./interfaces"
+import { AddResult, Cursor, Dict, Index, Range } from "./interfaces";
 
 export abstract class DictBase<K, V> implements Dict<K, V> {
-
-  constructor(protected index: Index<[K, V], K>) {
-
-  }
+  constructor(protected index: Index<[K, V], K>) {}
 
   public equalKeys(key: K): Range<[K, V]> {
     return this.index.equalKeys(key);
@@ -72,5 +68,4 @@ export abstract class DictBase<K, V> implements Dict<K, V> {
   public toRange(): Range<[K, V]> {
     return this.index.toRange();
   }
-
 }

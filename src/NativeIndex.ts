@@ -1,18 +1,14 @@
-
 import { AddResult, Cursor, Index, Range } from "./interfaces";
 import { getKey, isEqual, isIterable, ResolveAction } from "./util";
 
 export class NativeIndexCursor<T, K extends PropertyKey> implements Cursor<T> {
-
   constructor(
     protected index: NativeIndex<T, K>,
     /**
      * @ignore
      */
-    public key: K,
-  ) {
-
-  }
+    public key: K
+  ) {}
 
   public get value() {
     return this.index.mapping[this.key];
@@ -21,24 +17,22 @@ export class NativeIndexCursor<T, K extends PropertyKey> implements Cursor<T> {
   public set value(newValue: T) {
     this.index.mapping[this.key] = newValue;
   }
-
 }
 
 export class FullNativeIndexRange<T, K extends PropertyKey> {
-
-  constructor(protected index: NativeIndex<T, K>) {
-  }
+  constructor(protected index: NativeIndex<T, K>) {}
 
   public *[Symbol.iterator]() {
     for (const key in this.index.mapping) {
       yield this.index.mapping[key];
     }
   }
-
 }
 
-export interface NativeIndexOptions<T, K extends PropertyKey = T & PropertyKey> {
-
+export interface NativeIndexOptions<
+  T,
+  K extends PropertyKey = T & PropertyKey
+> {
   /**
    * An iterable that will be consumed to fill the index.
    */
@@ -62,11 +56,11 @@ export interface NativeIndexOptions<T, K extends PropertyKey = T & PropertyKey> 
    *
    * If omitted, the [[isEqual built-in equality function]] will be used.
    */
-  elementsEqual?: (a: T, b: T) => boolean
+  elementsEqual?: (a: T, b: T) => boolean;
 
   /**
    * A function that should extract the key out of an element.
-   * 
+   *
    * For example, dictionaries simply take the first element of a tuple array
    * to be the key.
    */
@@ -74,32 +68,32 @@ export interface NativeIndexOptions<T, K extends PropertyKey = T & PropertyKey> 
 
   /**
    * What to do when the key of the element being added already exists in the index.
-   * 
+   *
    * This property defaults to [[ResolveAction.Error]].
    */
   onDuplicateKeys?: ResolveAction;
 
   /**
    * What to do when the the element being added already exists in the index.
-   * 
+   *
    * This property defaults to [[ResolveAction.Error]].
    */
   onDuplicateElements?: ResolveAction;
-
 }
 
 /**
  * An index that uses native JavaScript objects to efficiently store and
  * retrieve arbitrary values.
- * 
+ *
  * This container only works with hashable JavaScript types, such as `string`
  * or `number`. Types that cannot be used as the key in a plain JavaScript
  * object will not work.
- * 
+ *
  * @experimental
  */
-export class NativeIndex<T, K extends PropertyKey = T & PropertyKey> implements Index<T, K> {
-
+export class NativeIndex<T, K extends PropertyKey = T & PropertyKey>
+  implements Index<T, K>
+{
   /**
    * @ignore
    */
@@ -115,7 +109,7 @@ export class NativeIndex<T, K extends PropertyKey = T & PropertyKey> implements 
 
   constructor(opts: Iterable<T> | NativeIndexOptions<T, K>) {
     if (isIterable(opts)) {
-      opts = { elements: opts }
+      opts = { elements: opts };
     }
     this.getKey = opts.getKey ?? getKey;
     this.areKeysEqual = opts.keysEqual ?? isEqual;
@@ -188,12 +182,12 @@ export class NativeIndex<T, K extends PropertyKey = T & PropertyKey> implements 
       getKey: this.getKey,
       onDuplicateElements: this.onDuplicateElements,
       onDuplicateKeys: this.onDuplicateKeys,
-    })
+    });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public equalKeys(key: K): Range<T> {
-    throw new Error(`Method not implemented.`)
+    throw new Error(`Method not implemented.`);
   }
 
   public toRange(): Range<T> {
@@ -217,20 +211,28 @@ export class NativeIndex<T, K extends PropertyKey = T & PropertyKey> implements 
     if (otherElement !== undefined) {
       switch (this.onDuplicateKeys) {
         case ResolveAction.Error:
-          throw new Error(`The key ${key} already exists in this index and duplicates are not allowed.`);
+          throw new Error(
+            `The key ${key} already exists in this index and duplicates are not allowed.`
+          );
         case ResolveAction.Ignore:
           return [false, cursor];
         case ResolveAction.Insert:
-          throw new Error(`Cannot insert an element with a key that already exists into a container that does not support it.`)
+          throw new Error(
+            `Cannot insert an element with a key that already exists into a container that does not support it.`
+          );
       }
       if (this.isEqual(element, otherElement)) {
         switch (this.onDuplicateElements) {
           case ResolveAction.Error:
-            throw new Error(`The element ${element} is already present in this index and duplicates are not allowed.`)
+            throw new Error(
+              `The element ${element} is already present in this index and duplicates are not allowed.`
+            );
           case ResolveAction.Ignore:
             return [false, cursor];
-        case ResolveAction.Insert:
-          throw new Error(`Cannot insert an element with a key that already exists into a container that does not support it.`)
+          case ResolveAction.Insert:
+            throw new Error(
+              `Cannot insert an element with a key that already exists into a container that does not support it.`
+            );
         }
       }
     } else {
@@ -239,5 +241,4 @@ export class NativeIndex<T, K extends PropertyKey = T & PropertyKey> implements 
     this.mapping[key] = element;
     return [true, cursor];
   }
-
 }

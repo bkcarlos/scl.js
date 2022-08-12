@@ -1,8 +1,6 @@
-
-import { RBTreeIndex } from "./RBTreeIndex"
+import { RBTreeIndex } from "./RBTreeIndex";
 
 export interface TreeIndexOptions<T, K = T> {
-
   /**
    * An iterable that will be consumed to fill the collection.
    */
@@ -22,7 +20,6 @@ export interface TreeIndexOptions<T, K = T> {
    */
   getKey?: (elements: T) => K;
 
-
   /**
    * Used for checking two elements with the same key in the collection.
    */
@@ -33,7 +30,6 @@ export interface TreeIndexOptions<T, K = T> {
    * [[isEqual]] returns true to be added to the collection.
    */
   allowDuplicates?: boolean;
-
 }
 
 /**
@@ -93,9 +89,7 @@ export interface TreeIndexOptions<T, K = T> {
  * @see AVLTreeIndex
  */
 export class TreeIndex<T, K = T> extends RBTreeIndex<T, K> {
-
   constructor(opts: Iterable<T> | TreeIndexOptions<T, K> = {}) {
     super(opts);
   }
-
 }

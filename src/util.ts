@@ -1,4 +1,3 @@
-
 import { Range, Cursor } from "./interfaces";
 
 export function isIterable<T = any>(value: any): value is Iterable<T> {
@@ -12,14 +11,16 @@ export enum ResolveAction {
   Replace,
 }
 
-export const getKeyTag = Symbol('object key property');
+export const getKeyTag = Symbol("object key property");
 
 function isPrimitive(value: any): boolean {
-  return value === null
-      || typeof(value) === 'number'
-      || typeof(value) === 'string'
-      || typeof(value) === 'boolean'
-      || typeof(value) === 'bigint';
+  return (
+    value === null ||
+    typeof value === "number" ||
+    typeof value === "string" ||
+    typeof value === "boolean" ||
+    typeof value === "bigint"
+  );
 }
 
 export function getKey(value: any) {
@@ -32,7 +33,9 @@ export function getKey(value: any) {
   if (Array.isArray(value)) {
     return value[0];
   }
-  throw new Error(`Could not extract a key-value pair out of the provided JavaScript object`)
+  throw new Error(
+    `Could not extract a key-value pair out of the provided JavaScript object`
+  );
 }
 
 /**
@@ -63,7 +66,7 @@ export function getKey(value: any) {
  *
  * @see [[Hasher]]
  */
-export const hashTag = Symbol('object hash method');
+export const hashTag = Symbol("object hash method");
 
 /**
  * The callback given to methods that implement the [[hashTag]] protocol.
@@ -91,21 +94,21 @@ export function hash(value: any): number {
   let result = 17;
   const combine = (num: number) => {
     result = result * 31 + num;
-  }
+  };
   const visit = (value: any) => {
     if (value === null) {
       combine(0);
       return;
     }
-    if (typeof(value) === 'boolean') {
+    if (typeof value === "boolean") {
       combine(value ? 1 : 0);
       return;
     }
-    if (typeof(value) === 'number') {
+    if (typeof value === "number") {
       combine(value);
       return;
     }
-    if (typeof(value) === 'string') {
+    if (typeof value === "string") {
       for (let i = 0; i < value.length; i++) {
         combine(value.charCodeAt(i));
       }
@@ -127,8 +130,8 @@ export function hash(value: any): number {
       }
       return;
     }
-    throw new Error(`Could not hash the given object.`)
-  }
+    throw new Error(`Could not hash the given object.`);
+  };
   visit(value);
   return result;
 }
@@ -161,7 +164,7 @@ export function hash(value: any): number {
  *
  * @see [[lessThan]]
  */
-export const compareTag = Symbol('object comparison method');
+export const compareTag = Symbol("object comparison method");
 
 /**
  * Check whether the given value is smaller than another value.
@@ -198,10 +201,10 @@ export const compareTag = Symbol('object comparison method');
  * The above rules might seem strange at first, but they ensure that we can
  * perform equality checks on string, arrays and objects by just using
  * [[lessThan]], as demonstrated in the following code:
- * 
+ *
  * ```
  * import { lessThan } from "scl";
- * 
+ *
  * function equalByLesser(a, b) {
  *   return !lessThan(a, b) && !lessThan(b, a);
  * }
@@ -221,10 +224,10 @@ export const compareTag = Symbol('object comparison method');
  * @see [[isEqual]]
  */
 export function lessThan(a: any, b: any) {
-  if (typeof(a) === "number" && typeof(b) === "number") {
+  if (typeof a === "number" && typeof b === "number") {
     return a < b;
   }
-  if (typeof(a) === "string" && typeof(b) === "string") {
+  if (typeof a === "string" && typeof b === "string") {
     return a < b;
   }
   if (isArray(a) && isArray(b)) {
@@ -290,7 +293,7 @@ export function lessThan(a: any, b: any) {
  *
  * @see [[isEqual]]
  */
-export const isEqualTag = Symbol('object equality method');
+export const isEqualTag = Symbol("object equality method");
 
 /**
  * Check whether two values are the same
@@ -353,9 +356,12 @@ export function isEqual(a: any, b: any): boolean {
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
-type AnyObject = { [key: string]: any }
+type AnyObject = { [key: string]: any };
 
-export function omit<O extends AnyObject, K extends keyof O>(obj: O, ...keys: K[]): Omit<O, K>  {
+export function omit<O extends AnyObject, K extends keyof O>(
+  obj: O,
+  ...keys: K[]
+): Omit<O, K> {
   const out: any = {}; // no need to typecheck
   for (const key of Object.keys(obj)) {
     if (keys.indexOf(key as K) === -1) {
@@ -366,8 +372,7 @@ export function omit<O extends AnyObject, K extends keyof O>(obj: O, ...keys: K[
 }
 
 export class EmptyRange<T> implements Range<T> {
-
-  constructor(public readonly reversed = false) { }
+  constructor(public readonly reversed = false) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public filter(predicate: (element: Cursor<T>) => boolean) {
@@ -382,14 +387,9 @@ export class EmptyRange<T> implements Range<T> {
     return 0;
   }
 
-  public *cursors(): IterableIterator<Cursor<T>> {
+  public *cursors(): IterableIterator<Cursor<T>> {}
 
-  }
-
-  public *[Symbol.iterator](): IterableIterator<T> {
-
-  }
-
+  public *[Symbol.iterator](): IterableIterator<T> {}
 }
 
 export function get(value: any, path: any[]) {
@@ -410,7 +410,6 @@ export function get(value: any, path: any[]) {
  * ```
  */
 export abstract class CursorBase<T> implements Cursor<T> {
-
   public abstract value: T;
 
   public *nextAll(): IterableIterator<Cursor<T>> {
@@ -428,7 +427,6 @@ export abstract class CursorBase<T> implements Cursor<T> {
       cursor = cursor.prev!();
     } while (cursor !== null);
   }
-
 }
 
 /**
@@ -442,7 +440,6 @@ export abstract class CursorBase<T> implements Cursor<T> {
  * ```
  */
 export abstract class RangeBase<T> implements Range<T> {
-
   public abstract readonly size: number;
 
   public abstract cursors(): IterableIterator<Cursor<T>>;
@@ -452,12 +449,13 @@ export abstract class RangeBase<T> implements Range<T> {
   public filter(pred: (el: Cursor<T>) => boolean): Range<T> {
     return new FilteredRange<T>(this, pred);
   }
-
 }
 
 export class FilteredRange<T> extends RangeBase<T> {
-
-  constructor(public _range: Range<T>, public _pred: (el: Cursor<T>) => boolean) {
+  constructor(
+    public _range: Range<T>,
+    public _pred: (el: Cursor<T>) => boolean
+  ) {
     super();
   }
 
@@ -484,13 +482,12 @@ export class FilteredRange<T> extends RangeBase<T> {
       }
     }
   }
-
 }
 
-export type Newable<T> = new(...args: any[]) => T;
+export type Newable<T> = new (...args: any[]) => T;
 
 export function isObject(val: any): boolean {
-  return Object.prototype.toString.call(val) === '[object Object]';
+  return Object.prototype.toString.call(val) === "[object Object]";
 }
 
 export function isArray(val: any): boolean {

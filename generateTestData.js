@@ -6,19 +6,18 @@ function randomIntegers(count) {
     array[i] = i;
   }
   for (let i = 0; i < count; i++) {
-    const j = Math.floor(Math.random() * count)
-    const keep = array[i]
-    array[i] = array[j]
-    array[j] = keep
+    const j = Math.floor(Math.random() * count);
+    const keep = array[i];
+    array[i] = array[j];
+    array[j] = keep;
   }
   return array;
 }
 
 for (let i = 0; i < 10; i++) {
   fs.writeFileSync(
-    path.join(__dirname, 'test', `numbers${i}.json`),
+    path.join(__dirname, "test", `numbers${i}.json`),
     JSON.stringify(randomIntegers(1000), undefined, 2),
-    'utf8'
+    "utf8"
   );
 }
-

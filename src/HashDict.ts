@@ -1,4 +1,3 @@
-
 import { DictBase } from "./DictBase";
 import { HashIndex, HashIndexOptions } from "./HashIndex";
 import { isEqual, isIterable, ResolveAction } from "./util";
@@ -11,7 +10,7 @@ import { isEqual, isIterable, ResolveAction } from "./util";
  *
  * ```ts
  * import { hash as xxh } from "xxhash"
- * 
+ *
  * const d = new HashDict<number, string>({
  *   capacity: 1024,
  *   getHash: key => xxh(key),
@@ -24,7 +23,6 @@ import { isEqual, isIterable, ResolveAction } from "./util";
  * @see [[HashMultiDict]]
  */
 export interface HashDictOptions<K, V> extends HashIndexOptions<[K, V], K> {
-
   /**
    * A predicate determining when two elements are equal.
    *
@@ -34,7 +32,6 @@ export interface HashDictOptions<K, V> extends HashIndexOptions<[K, V], K> {
    * If omitted, the [[equal built-in equality function]] will be used.
    */
   valuesEqual?: (a: V, b: V) => boolean;
-
 }
 
 /**
@@ -63,7 +60,6 @@ export interface HashDictOptions<K, V> extends HashIndexOptions<[K, V], K> {
  * @typeparam V The type of value associated with the given key.
  */
 export class HashDict<K, V> extends DictBase<K, V> {
-
   /**
    * Construct a new hash-based dictionary.
    *
@@ -97,17 +93,16 @@ export class HashDict<K, V> extends DictBase<K, V> {
    *
    * [1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
    */
-  constructor(opts: Iterable<[K, V]> | HashIndex<[K, V], K> | HashDictOptions<K, V> = {}) {
+  constructor(
+    opts: Iterable<[K, V]> | HashIndex<[K, V], K> | HashDictOptions<K, V> = {}
+  ) {
     if (opts instanceof HashIndex) {
       super(opts);
     } else {
       if (isIterable(opts)) {
         opts = { elements: opts };
       }
-      const {
-        valuesEqual = isEqual,
-        ...restOpts
-      } = opts;
+      const { valuesEqual = isEqual, ...restOpts } = opts;
       super(
         new HashIndex<[K, V], K>({
           elementsEqual: (a, b) => valuesEqual(a[1], b[1]),
@@ -122,7 +117,6 @@ export class HashDict<K, V> extends DictBase<K, V> {
   public clone(): HashDict<K, V> {
     return new HashDict<K, V>(this.index.clone());
   }
-
 }
 
 export default HashDict;

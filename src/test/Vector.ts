@@ -1,4 +1,3 @@
-
 import { expect } from "chai";
 import Vector from "../Vector";
 import { test } from "./_helpers";
@@ -26,7 +25,7 @@ test("Vector.slice() can take slices of slices", (v: Vector<number>) => {
 test("new Vector.insertBefore() allocates more storage if required", () => {
   const v = new Vector({
     allocStep: 5,
-    capacity: 5
+    capacity: 5,
   });
   expect(v.capacity).to.equal(5);
   const cursor = v.append(1);
@@ -49,8 +48,8 @@ test("new Vector.insertBefore() allocates more storage if required", () => {
 test("new Vector.insertAfter() allocates more storage if required", () => {
   const v = new Vector({
     allocStep: 5,
-    capacity: 5
-  })
+    capacity: 5,
+  });
   expect(v.capacity).to.equal(5);
   const cursor = v.append(1);
   v.insertAfter(cursor, 2);
@@ -72,8 +71,8 @@ test("new Vector.insertAfter() allocates more storage if required", () => {
 test("new Vector.append() allocates more storage if required", () => {
   const v = new Vector({
     allocStep: 5,
-    capacity: 5
-  })
+    capacity: 5,
+  });
   expect(v.capacity).to.equal(5);
   v.append(1);
   v.append(2);
@@ -95,8 +94,8 @@ test("new Vector.append() allocates more storage if required", () => {
 test("new Vector.prepend() allocates more storage if required", () => {
   const v = new Vector({
     allocStep: 5,
-    capacity: 3
-  })
+    capacity: 3,
+  });
   expect(v.capacity).to.equal(3);
   v.prepend(1);
   v.prepend(2);
@@ -146,7 +145,7 @@ test("Vector.shrinkFit() retains the elements that are added to the vector", (v:
 test("Vector.allocate() grows the vector if it is too small", () => {
   const v = new Vector({
     allocStep: 5,
-    capacity: 3
+    capacity: 3,
   });
   expect(v.capacity).to.equal(3);
   v.allocate(15);

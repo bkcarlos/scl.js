@@ -1,4 +1,3 @@
-
 import { HashIndex } from "./HashIndex";
 import { isEqual, isIterable, ResolveAction } from "./util";
 import { HashDictOptions } from "./HashDict";
@@ -29,7 +28,6 @@ import { MultiDictBase } from "./MultiDictBase";
  * ```
  */
 export class HashMultiDict<K, V> extends MultiDictBase<K, V> {
-
   /**
    * Construct a new hash-based dictionary.
    *
@@ -63,23 +61,22 @@ export class HashMultiDict<K, V> extends MultiDictBase<K, V> {
    *
    * [1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
    */
-  constructor(opts: Iterable<[K, V]> | HashIndex<[K, V], K> | HashDictOptions<K, V> = {}) {
+  constructor(
+    opts: Iterable<[K, V]> | HashIndex<[K, V], K> | HashDictOptions<K, V> = {}
+  ) {
     if (opts instanceof HashIndex) {
       super(opts);
     } else {
       if (isIterable(opts)) {
         opts = { elements: opts };
       }
-      const {
-        valuesEqual = isEqual,
-        ...restOpts
-      } = opts;
+      const { valuesEqual = isEqual, ...restOpts } = opts;
       super(
         new HashIndex({
           onDuplicateKeys: ResolveAction.Insert,
           onDuplicateElements: ResolveAction.Insert,
           elementsEqual: (a, b) => valuesEqual(a[1], b[1]),
-          getKey: pair => pair[0],
+          getKey: (pair) => pair[0],
           ...restOpts,
         })
       );
@@ -89,7 +86,6 @@ export class HashMultiDict<K, V> extends MultiDictBase<K, V> {
   public clone() {
     return new HashMultiDict<K, V>(this.index.clone());
   }
-
 }
 
 export default HashMultiDict;

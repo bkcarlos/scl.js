@@ -1,4 +1,3 @@
-
 import { BSTreeIndexOptions } from "./BSTreeIndex";
 import { RBTreeDict } from "./RBTreeDict";
 
@@ -9,7 +8,6 @@ import { RBTreeDict } from "./RBTreeDict";
  * @see [[TreeMultiDict]]
  */
 export interface TreeDictOptions<K, V> extends BSTreeIndexOptions<[K, V], K> {
-
   /**
    * Compares two values in the dictionary and returns whether the values are
    * the same.
@@ -21,7 +19,6 @@ export interface TreeDictOptions<K, V> extends BSTreeIndexOptions<[K, V], K> {
    * values.
    */
   valuesEqual?: (a: V, b: V) => boolean;
-
 }
 
 /**
@@ -75,8 +72,6 @@ export interface TreeDictOptions<K, V> extends BSTreeIndexOptions<[K, V], K> {
  * @typeparam K The type of key of a given entry.
  * @typeparam V The type of value associated with the given key.
  */
-export class TreeDict<K, V> extends RBTreeDict<K, V> {
-
-}
+export class TreeDict<K, V> extends RBTreeDict<K, V> {}
 
 export default TreeDict;

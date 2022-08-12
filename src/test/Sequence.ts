@@ -1,4 +1,3 @@
-
 import { expect } from "chai";
 import { Sequence } from "../interfaces";
 import { test } from "./_helpers";
@@ -98,7 +97,6 @@ test("Sequence.insertAfter() returns a working cursor", (seq: Sequence<string>) 
 });
 
 test("Sequence.insertAfter() returns a working cursor even when inserting at the end", (seq: Sequence<string>) => {
-
   seq.append("a");
   const pos = seq.append("b");
   expect(seq.size).to.equal(2);

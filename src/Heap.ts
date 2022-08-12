@@ -1,4 +1,3 @@
-
 import { Cursor } from "./interfaces";
 import Vector, { VectorCursor, VectorOptions } from "./Vector";
 
@@ -7,7 +6,6 @@ export interface HeapOptions<T> extends VectorOptions<T> {
 }
 
 export class BinaryMinHeap<T> {
-
   public get size(): number {
     return this.vector.size;
   }
@@ -20,10 +18,8 @@ export class BinaryMinHeap<T> {
     /**
      * @ignore
      */
-    public compare: (a: T, b: T) => boolean,
-  ) {
-
-  }
+    public compare: (a: T, b: T) => boolean
+  ) {}
 
   public min(): T {
     if (this.vector.size === 0) {
@@ -74,7 +70,13 @@ export class BinaryMinHeap<T> {
     if (this.vector.size <= 1) {
       return;
     }
-    if (index > 1 && !this.compare(replacement, this.vector.getAt(Math.floor((index + 1) / 2) - 1))) {
+    if (
+      index > 1 &&
+      !this.compare(
+        replacement,
+        this.vector.getAt(Math.floor((index + 1) / 2) - 1)
+      )
+    ) {
       this.siftUp(index + 1);
     } else {
       this.siftDown(index + 1);
@@ -91,12 +93,25 @@ export class BinaryMinHeap<T> {
 
   private siftDown(position: number) {
     while (true) {
-      const left = 2 * position, right = 2 * position + 1;
+      const left = 2 * position,
+        right = 2 * position + 1;
       let smallest = position;
-      if (left <= this.vector.size && this.compare(this.vector.getAt(left - 1), this.vector.getAt(smallest - 1))) {
+      if (
+        left <= this.vector.size &&
+        this.compare(
+          this.vector.getAt(left - 1),
+          this.vector.getAt(smallest - 1)
+        )
+      ) {
         smallest = left;
       }
-      if (right <= this.vector.size && this.compare(this.vector.getAt(right - 1), this.vector.getAt(smallest - 1))) {
+      if (
+        right <= this.vector.size &&
+        this.compare(
+          this.vector.getAt(right - 1),
+          this.vector.getAt(smallest - 1)
+        )
+      ) {
         smallest = right;
       }
       if (smallest !== position) {
@@ -112,7 +127,12 @@ export class BinaryMinHeap<T> {
     let element = this.vector.getAt(position - 1);
     while (position > 1) {
       const parentPos = Math.floor(position / 2);
-      if (!this.compare(this.vector.getAt(parentPos - 1), this.vector.getAt(position - 1))) {
+      if (
+        !this.compare(
+          this.vector.getAt(parentPos - 1),
+          this.vector.getAt(position - 1)
+        )
+      ) {
         // swap() inlined to save one getAt() call
         const keep = this.vector.getAt(parentPos - 1);
         this.vector.replace(parentPos - 1, element);
@@ -125,7 +145,6 @@ export class BinaryMinHeap<T> {
     }
     return position;
   }
-
 }
 
 export default BinaryMinHeap;

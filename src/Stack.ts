@@ -1,4 +1,3 @@
-
 import { Queuelike } from "./interfaces";
 import { SingleLinkedList } from "./SingleLinkedList";
 
@@ -25,7 +24,6 @@ import { SingleLinkedList } from "./SingleLinkedList";
  * @see [[PriorityQueue]]
  */
 export class Stack<T> extends SingleLinkedList<T> implements Queuelike<T> {
-
   public peek() {
     return this.first();
   }
@@ -35,7 +33,6 @@ export class Stack<T> extends SingleLinkedList<T> implements Queuelike<T> {
     this.deleteAt(cursor);
     return cursor.value;
   }
-
 }
 
 export default Stack;

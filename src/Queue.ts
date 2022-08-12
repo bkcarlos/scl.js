@@ -1,7 +1,6 @@
-
 import { Queuelike } from "./interfaces";
 
-import DoubleLinkedList, {DoubleLinkedListCursor} from "./DoubleLinkedList";
+import DoubleLinkedList, { DoubleLinkedListCursor } from "./DoubleLinkedList";
 
 /**
  * A _FIFO queue_, where the first element pushed into the collection is also
@@ -29,7 +28,6 @@ import DoubleLinkedList, {DoubleLinkedListCursor} from "./DoubleLinkedList";
  * @see [[PriorityQueue]]
  */
 export class Queue<T> extends DoubleLinkedList<T> implements Queuelike<T> {
-
   public static from<T>(iterable: Iterable<T>) {
     const queue = new Queue<T>();
     for (const element of iterable) {
@@ -64,7 +62,6 @@ export class Queue<T> extends DoubleLinkedList<T> implements Queuelike<T> {
   public add(el: T): [boolean, DoubleLinkedListCursor<T>] {
     return [true, this.append(el)];
   }
-
 }
 
 export default Queue;

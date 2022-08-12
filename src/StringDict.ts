@@ -1,9 +1,7 @@
-
 import { Range, Cursor, Dict, Pair } from "./interfaces";
 import { CursorBase, RangeBase } from "./util";
 
 class ObjectCursor<V> extends CursorBase<[string, V]> {
-
   constructor(public _dict: StringDict<V>, public key: string) {
     super();
   }
@@ -15,11 +13,9 @@ class ObjectCursor<V> extends CursorBase<[string, V]> {
   set value(newValue: [string, V]) {
     this._dict._values[this.key] = newValue[1];
   }
-
 }
 
 class ObjectRange<V> extends RangeBase<[string, V]> {
-
   constructor(public _dict: StringDict<V>) {
     super();
   }
@@ -37,7 +33,6 @@ class ObjectRange<V> extends RangeBase<[string, V]> {
       yield new ObjectCursor<V>(this._dict, key);
     }
   }
-
 }
 
 /**
@@ -59,11 +54,10 @@ class ObjectRange<V> extends RangeBase<[string, V]> {
  * ```
  *
  * All operations in the dictionary are in `O(1)`.
- * 
+ *
  * @deprecated
  */
 export class StringDict<V> implements Dict<string, V> {
-
   /**
    * @ignore
    */
@@ -97,7 +91,7 @@ export class StringDict<V> implements Dict<string, V> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public equalKeys(key: string): Range<[string, V]> {
-    throw new Error(`Method not implemented.`)
+    throw new Error(`Method not implemented.`);
   }
 
   public add([key, val]: Pair<string, V>) {
@@ -110,8 +104,7 @@ export class StringDict<V> implements Dict<string, V> {
 
   public has(element: Pair<string, V>) {
     const value = this._values[element[0]];
-    return value !== undefined
-        && element[1] === value;
+    return value !== undefined && element[1] === value;
   }
 
   public emplace(key: string, value: V): [boolean, Cursor<[string, V]>] {
@@ -191,7 +184,6 @@ export class StringDict<V> implements Dict<string, V> {
   public clone() {
     return new StringDict<V>(Object.assign(Object.create(null), this._values));
   }
-
 }
 
 export default StringDict;

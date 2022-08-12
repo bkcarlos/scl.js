@@ -1,4 +1,3 @@
-
 import { List } from "./interfaces";
 import { CursorBase, RangeBase } from "./util";
 
@@ -11,7 +10,6 @@ interface Node<T> {
  * @ignore
  */
 export class SingleLinkedListCursor<T> extends CursorBase<T> {
-
   constructor(protected _list: SingleLinkedList<T>, public _node: Node<T>) {
     super();
   }
@@ -38,20 +36,26 @@ export class SingleLinkedListCursor<T> extends CursorBase<T> {
     }
     return new SingleLinkedListCursor<T>(this._list, this._node.next);
   }
-
 }
 
 /**
  * @ignore
  */
 export class SingleLinkedListRange<T> extends RangeBase<T> {
-
- constructor(protected _list: SingleLinkedList<T>, protected _startNode: Node<T> | null, protected _endNode: Node<T> | null, public readonly reversed: boolean) {
+  constructor(
+    protected _list: SingleLinkedList<T>,
+    protected _startNode: Node<T> | null,
+    protected _endNode: Node<T> | null,
+    public readonly reversed: boolean
+  ) {
     super();
   }
 
   get size() {
-    if (this._startNode === this._list._firstNode && this._endNode === this._list._lastNode) {
+    if (
+      this._startNode === this._list._firstNode &&
+      this._endNode === this._list._lastNode
+    ) {
       return this._list.size;
     }
     let count = 0;
@@ -67,7 +71,12 @@ export class SingleLinkedListRange<T> extends RangeBase<T> {
   }
 
   public reverse() {
-    return new SingleLinkedListRange<T>(this._list, this._startNode, this._endNode, !this.reversed);
+    return new SingleLinkedListRange<T>(
+      this._list,
+      this._startNode,
+      this._endNode,
+      !this.reversed
+    );
   }
 
   public *[Symbol.iterator]() {
@@ -113,7 +122,6 @@ export class SingleLinkedListRange<T> extends RangeBase<T> {
       }
     }
   }
-
 }
 
 /**
@@ -146,7 +154,6 @@ export class SingleLinkedListRange<T> extends RangeBase<T> {
  * @typeparam T The type of element in this collection.
  */
 export class SingleLinkedList<T> implements List<T> {
-
   /**
    * @ignore
    */
@@ -290,20 +297,24 @@ export class SingleLinkedList<T> implements List<T> {
     let i = position;
     while (i > 0) {
       if (curr === null) {
-        throw new RangeError(`Could not get element at i ${position}: index out of bounds.`);
+        throw new RangeError(
+          `Could not get element at i ${position}: index out of bounds.`
+        );
       }
       curr = curr.next;
       --i;
     }
     if (curr === null) {
-      throw new RangeError(`Could not get element at position ${position}: index out of bounds.`);
+      throw new RangeError(
+        `Could not get element at position ${position}: index out of bounds.`
+      );
     }
     return new SingleLinkedListCursor<T>(this, curr);
   }
 
   public deleteAt(pos: SingleLinkedListCursor<T>) {
-    const prev = this._findPrev(pos._node)
-        , next = pos._node.next;
+    const prev = this._findPrev(pos._node),
+      next = pos._node.next;
     if (prev === null) {
       this._firstNode = next;
     } else {
@@ -368,7 +379,12 @@ export class SingleLinkedList<T> implements List<T> {
   }
 
   public toRange() {
-    return new SingleLinkedListRange<T>(this, this._firstNode, this._lastNode, false);
+    return new SingleLinkedListRange<T>(
+      this,
+      this._firstNode,
+      this._lastNode,
+      false
+    );
   }
 
   public rest(): List<T> {
@@ -391,7 +407,6 @@ export class SingleLinkedList<T> implements List<T> {
     this._lastNode = null;
     this._size = 0;
   }
-
 }
 
 export default SingleLinkedList;

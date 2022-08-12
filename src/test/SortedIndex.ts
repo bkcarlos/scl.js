@@ -1,13 +1,14 @@
-
 import { expect } from "chai";
-import { test } from "./_helpers"
+import { test } from "./_helpers";
 import { SortedIndex } from "../interfaces";
 
-import numbers1 from "./data/numbers1.json"
+import numbers1 from "./data/numbers1.json";
 import { Newable, ResolveAction } from "../util";
 import { checkInvariants } from "./invariants";
 
-test<SortedIndex<number>>("SortedIndex.add() stores elements in the correct order", index => {
+test<
+  SortedIndex<number>
+>("SortedIndex.add() stores elements in the correct order", (index) => {
   index.add(1);
   index.add(5);
   index.add(2);
@@ -16,7 +17,9 @@ test<SortedIndex<number>>("SortedIndex.add() stores elements in the correct orde
   expect([...index]).to.deep.equal([1, 2, 3, 4, 5]);
 });
 
-test<SortedIndex<number>>("SortedIndex.toRange() can reverse-iterate over elements in the correct sorted order", index => {
+test<
+  SortedIndex<number>
+>("SortedIndex.toRange() can reverse-iterate over elements in the correct sorted order", (index) => {
   index.add(1);
   index.add(5);
   index.add(2);
@@ -25,7 +28,9 @@ test<SortedIndex<number>>("SortedIndex.toRange() can reverse-iterate over elemen
   expect([...index.toRange().reverse!()]).to.deep.equal([5, 4, 3, 2, 1]);
 });
 
-test<SortedIndex<number>>("SortedIndex.delete() deletes elements while retaining order", index => {
+test<
+  SortedIndex<number>
+>("SortedIndex.delete() deletes elements while retaining order", (index) => {
   index.add(1);
   index.add(5);
   index.add(2);
@@ -44,7 +49,9 @@ test<SortedIndex<number>>("SortedIndex.delete() deletes elements while retaining
   expect([...index]).to.deep.equal([]);
 });
 
-test<SortedIndex<number>>("SortedIndex.getGreatestLowerBound() finds the lower bound of an existing key", index => {
+test<
+  SortedIndex<number>
+>("SortedIndex.getGreatestLowerBound() finds the lower bound of an existing key", (index) => {
   index.add(1);
   index.add(5);
   index.add(2);
@@ -62,7 +69,9 @@ test<SortedIndex<number>>("SortedIndex.getGreatestLowerBound() finds the lower b
   expect(pos5!.value).to.equal(5);
 });
 
-test<SortedIndex<number>>("SortedIndex.getLeastUpperBound() finds the upper bound of an existing key", index => {
+test<
+  SortedIndex<number>
+>("SortedIndex.getLeastUpperBound() finds the upper bound of an existing key", (index) => {
   index.add(1);
   index.add(5);
   index.add(2);
@@ -80,7 +89,9 @@ test<SortedIndex<number>>("SortedIndex.getLeastUpperBound() finds the upper boun
   expect(pos5!.value).to.equal(5);
 });
 
-test<SortedIndex<number>>("SortedIndex.getGreatestLowerBound() works on existing keys no matter where the node is located", index => {
+test<
+  SortedIndex<number>
+>("SortedIndex.getGreatestLowerBound() works on existing keys no matter where the node is located", (index) => {
   for (const num of numbers1) {
     index.add(num);
   }
@@ -88,9 +99,11 @@ test<SortedIndex<number>>("SortedIndex.getGreatestLowerBound() works on existing
     const pos = index.getGreatestLowerBound(num);
     expect(pos!.value).to.equal(num);
   }
-})
+});
 
-test<SortedIndex<number>>("SortedIndex.getLeastUpperBound() works on existing keys no matter where the node is located", index => {
+test<
+  SortedIndex<number>
+>("SortedIndex.getLeastUpperBound() works on existing keys no matter where the node is located", (index) => {
   for (const num of numbers1) {
     index.add(num);
   }
@@ -100,7 +113,9 @@ test<SortedIndex<number>>("SortedIndex.getLeastUpperBound() works on existing ke
   }
 });
 
-test<SortedIndex<number>>("SortedIndex.getLeastUpperBound() finds the nearest upper bound if the key is not found", index => {
+test<
+  SortedIndex<number>
+>("SortedIndex.getLeastUpperBound() finds the nearest upper bound if the key is not found", (index) => {
   index.add(1);
   index.add(3);
   index.add(6);
@@ -138,10 +153,12 @@ test<SortedIndex<number>>("SortedIndex.getLeastUpperBound() finds the nearest up
   const pos15 = index.getLeastUpperBound(15);
   expect(pos15!.value).to.equal(15);
   const pos16 = index.getLeastUpperBound(16);
-  expect(pos16).to.be.null
+  expect(pos16).to.be.null;
 });
 
-test<SortedIndex<number>>("SortedIndex.getGreatestLowerBound() finds the nearest lower bound if the key is not found", index => {
+test<
+  SortedIndex<number>
+>("SortedIndex.getGreatestLowerBound() finds the nearest lower bound if the key is not found", (index) => {
   index.add(1);
   index.add(3);
   index.add(6);
@@ -182,7 +199,9 @@ test<SortedIndex<number>>("SortedIndex.getGreatestLowerBound() finds the nearest
   expect(pos16!.value).to.equal(15);
 });
 
-test("new SortedIndex.add() can store multiple equal keys", (Index: Newable<SortedIndex<number>>) => {
+test("new SortedIndex.add() can store multiple equal keys", (Index: Newable<
+  SortedIndex<number>
+>) => {
   const index = new Index({
     onDuplicateElements: ResolveAction.Insert,
     onDuplicateKeys: ResolveAction.Insert,
@@ -197,7 +216,9 @@ test("new SortedIndex.add() can store multiple equal keys", (Index: Newable<Sort
   expect([...index]).to.deep.equal([1, 2, 3, 3, 3, 4, 5]);
 });
 
-test("new SortedIndex.add() can handle lots of elements with the same key", (Index: Newable<SortedIndex<number>>) => {
+test("new SortedIndex.add() can handle lots of elements with the same key", (Index: Newable<
+  SortedIndex<number>
+>) => {
   const index = new Index({
     onDuplicateElements: ResolveAction.Insert,
     onDuplicateKeys: ResolveAction.Insert,
@@ -220,12 +241,14 @@ test("new SortedIndex.add() can handle lots of elements with the same key", (Ind
   index.add(1);
   index.add(1);
   checkInvariants(index);
-  const elements = [...index]
-  expect(elements).to.have.lengthOf(17)
-  expect(elements.every(num => num === 1)).to.be.true
+  const elements = [...index];
+  expect(elements).to.have.lengthOf(17);
+  expect(elements.every((num) => num === 1)).to.be.true;
 });
 
-test("new SortedIndex.equalKeys() returns a range with only keys that are the same", (Index: Newable<SortedIndex<number>>) => {
+test("new SortedIndex.equalKeys() returns a range with only keys that are the same", (Index: Newable<
+  SortedIndex<number>
+>) => {
   const index = new Index({
     onDuplicateElements: ResolveAction.Insert,
     onDuplicateKeys: ResolveAction.Insert,
@@ -239,4 +262,4 @@ test("new SortedIndex.equalKeys() returns a range with only keys that are the sa
   index.add(5);
   expect([...index.equalKeys!(7)]).to.deep.equal([]);
   expect([...index.equalKeys!(3)]).to.deep.equal([3, 3, 3]);
-})
+});

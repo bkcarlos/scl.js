@@ -1,4 +1,3 @@
-
 import { MultiDictBase } from "./MultiDictBase";
 import { isEqual, isIterable, ResolveAction } from "./util";
 import { TreeDictOptions } from "./TreeDict";
@@ -64,7 +63,6 @@ import { RBTreeIndex } from "./RBTreeIndex";
  * @typeparam V The type of value associated with the given key.
  */
 export class RBTreeMultiDict<K, V> extends MultiDictBase<K, V> {
-
   /**
    * Construct a new tree-based dictionary.
    *
@@ -97,30 +95,31 @@ export class RBTreeMultiDict<K, V> extends MultiDictBase<K, V> {
    *
    * [1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
    */
-  constructor(opts: Iterable<[K, V]> | RBTreeIndex<[K, V], K> | TreeDictOptions<K, V> = {}) {
+  constructor(
+    opts: Iterable<[K, V]> | RBTreeIndex<[K, V], K> | TreeDictOptions<K, V> = {}
+  ) {
     if (opts instanceof RBTreeIndex) {
       super(opts);
     } else {
       if (isIterable(opts)) {
-        opts = { elements: opts }
+        opts = { elements: opts };
       }
       const valuesEqual = opts.valuesEqual ?? isEqual;
       super(
         new RBTreeIndex({
-          getKey: pair => pair[0],
+          getKey: (pair) => pair[0],
           isEqual: (a, b) => valuesEqual(a[1], b[1]),
           onDuplicateKeys: ResolveAction.Insert,
           onDuplicateElements: ResolveAction.Insert,
-          ...opts
+          ...opts,
         })
       );
     }
   }
 
   public clone() {
-    return new RBTreeMultiDict(this.index)
+    return new RBTreeMultiDict(this.index);
   }
-
 }
 
 export default RBTreeMultiDict;

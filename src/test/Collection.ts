@@ -1,4 +1,3 @@
-
 import { expect } from "chai";
 import { Collection } from "../interfaces";
 import { checkInvariants } from "./invariants";
@@ -23,37 +22,37 @@ test("Collection.add() returns a cursor to the added element", (coll: Collection
 });
 
 test("Collection.add() successfully adds new elements and reports them as added", (coll: Collection<number>) => {
-  expect(coll.has(1)).to.be.false
-  expect(coll.has(2)).to.be.false
-  expect(coll.has(3)).to.be.false
-  expect(coll.has(4)).to.be.false
-  expect(coll.has(5)).to.be.false
+  expect(coll.has(1)).to.be.false;
+  expect(coll.has(2)).to.be.false;
+  expect(coll.has(3)).to.be.false;
+  expect(coll.has(4)).to.be.false;
+  expect(coll.has(5)).to.be.false;
   checkInvariants(coll);
   coll.add(1);
-  expect(coll.has(2)).to.be.false
-  expect(coll.has(3)).to.be.false
-  expect(coll.has(4)).to.be.false
-  expect(coll.has(5)).to.be.false
+  expect(coll.has(2)).to.be.false;
+  expect(coll.has(3)).to.be.false;
+  expect(coll.has(4)).to.be.false;
+  expect(coll.has(5)).to.be.false;
   checkInvariants(coll);
   coll.add(5);
-  expect(coll.has(3)).to.be.false
-  expect(coll.has(4)).to.be.false
-  expect(coll.has(2)).to.be.false
+  expect(coll.has(3)).to.be.false;
+  expect(coll.has(4)).to.be.false;
+  expect(coll.has(2)).to.be.false;
   checkInvariants(coll);
   coll.add(2);
-  expect(coll.has(4)).to.be.false
-  expect(coll.has(3)).to.be.false
+  expect(coll.has(4)).to.be.false;
+  expect(coll.has(3)).to.be.false;
   checkInvariants(coll);
   coll.add(3);
-  expect(coll.has(4)).to.be.false
+  expect(coll.has(4)).to.be.false;
   checkInvariants(coll);
   coll.add(4);
   checkInvariants(coll);
-  expect(coll.has(1)).to.be.true
-  expect(coll.has(2)).to.be.true
-  expect(coll.has(3)).to.be.true
-  expect(coll.has(4)).to.be.true
-  expect(coll.has(5)).to.be.true
+  expect(coll.has(1)).to.be.true;
+  expect(coll.has(2)).to.be.true;
+  expect(coll.has(3)).to.be.true;
+  expect(coll.has(4)).to.be.true;
+  expect(coll.has(5)).to.be.true;
 });
 
 test("Collection.add() should work some random data", (collection: Collection<number>) => {
@@ -62,7 +61,7 @@ test("Collection.add() should work some random data", (collection: Collection<nu
     collection.add(num);
     checkInvariants(collection);
   }
-})
+});
 
 test("RBTreeIndex.delete() works on some examples", (collection: Collection<number>) => {
   collection.add(1);
@@ -79,8 +78,7 @@ test("RBTreeIndex.delete() works on some examples", (collection: Collection<numb
   checkInvariants(collection);
   collection.delete(3);
   checkInvariants(collection);
-})
-
+});
 
 test("Collection.delete() should work on some random data", (collection: Collection<number>) => {
   for (const num of numbers1) {
@@ -129,7 +127,7 @@ test("Collection.toRange() generates the elements of the full sequence", (coll: 
   expect(elements).to.include("d");
 });
 
-test('Collection.clone() creates a collection which has the same elements as the original one', (collection: Collection<number>) => {
+test("Collection.clone() creates a collection which has the same elements as the original one", (collection: Collection<number>) => {
   collection.add(1);
   collection.add(2);
   collection.add(4);
@@ -137,22 +135,21 @@ test('Collection.clone() creates a collection which has the same elements as the
   collection.add(10);
   const cloned = collection.clone();
   expect(cloned.size).to.equal(5);
-  expect(cloned.has(0)).to.be.false
-  expect(cloned.has(1)).to.be.true
-  expect(cloned.has(2)).to.be.true
-  expect(cloned.has(3)).to.be.false
-  expect(cloned.has(4)).to.be.true
-  expect(cloned.has(5)).to.be.false
-  expect(cloned.has(6)).to.be.false
-  expect(cloned.has(7)).to.be.true
-  expect(cloned.has(8)).to.be.false
-  expect(cloned.has(9)).to.be.false
-  expect(cloned.has(10)).to.be.true
-  expect(cloned.has(11)).to.be.false
+  expect(cloned.has(0)).to.be.false;
+  expect(cloned.has(1)).to.be.true;
+  expect(cloned.has(2)).to.be.true;
+  expect(cloned.has(3)).to.be.false;
+  expect(cloned.has(4)).to.be.true;
+  expect(cloned.has(5)).to.be.false;
+  expect(cloned.has(6)).to.be.false;
+  expect(cloned.has(7)).to.be.true;
+  expect(cloned.has(8)).to.be.false;
+  expect(cloned.has(9)).to.be.false;
+  expect(cloned.has(10)).to.be.true;
+  expect(cloned.has(11)).to.be.false;
 });
 
-test('Collection.clone() creates a copy that is not dependant on the first collection', (collection: Collection<number>) => {
-
+test("Collection.clone() creates a copy that is not dependant on the first collection", (collection: Collection<number>) => {
   collection.add(1);
   collection.add(2);
   collection.add(4);
@@ -164,34 +161,33 @@ test('Collection.clone() creates a copy that is not dependant on the first colle
   cloned.delete(7);
 
   expect(collection.size).to.equal(5);
-  expect(collection.has(0)).to.be.false
-  expect(collection.has(1)).to.be.true
-  expect(collection.has(2)).to.be.true
-  expect(collection.has(3)).to.be.false
-  expect(collection.has(4)).to.be.true
-  expect(collection.has(5)).to.be.false
-  expect(collection.has(6)).to.be.false
-  expect(collection.has(7)).to.be.true
-  expect(collection.has(8)).to.be.false
-  expect(collection.has(9)).to.be.false
-  expect(collection.has(10)).to.be.true
-  expect(collection.has(11)).to.be.false
+  expect(collection.has(0)).to.be.false;
+  expect(collection.has(1)).to.be.true;
+  expect(collection.has(2)).to.be.true;
+  expect(collection.has(3)).to.be.false;
+  expect(collection.has(4)).to.be.true;
+  expect(collection.has(5)).to.be.false;
+  expect(collection.has(6)).to.be.false;
+  expect(collection.has(7)).to.be.true;
+  expect(collection.has(8)).to.be.false;
+  expect(collection.has(9)).to.be.false;
+  expect(collection.has(10)).to.be.true;
+  expect(collection.has(11)).to.be.false;
 
   expect(cloned.size).to.equal(5);
-  expect(cloned.has(0)).to.be.false
-  expect(cloned.has(1)).to.be.true
-  expect(cloned.has(2)).to.be.true
-  expect(cloned.has(3)).to.be.false
-  expect(cloned.has(4)).to.be.true
-  expect(cloned.has(5)).to.be.false
-  expect(cloned.has(6)).to.be.false
-  expect(cloned.has(7)).to.be.false
-  expect(cloned.has(8)).to.be.true
-  expect(cloned.has(9)).to.be.false
-  expect(cloned.has(10)).to.be.true
-  expect(cloned.has(11)).to.be.false
+  expect(cloned.has(0)).to.be.false;
+  expect(cloned.has(1)).to.be.true;
+  expect(cloned.has(2)).to.be.true;
+  expect(cloned.has(3)).to.be.false;
+  expect(cloned.has(4)).to.be.true;
+  expect(cloned.has(5)).to.be.false;
+  expect(cloned.has(6)).to.be.false;
+  expect(cloned.has(7)).to.be.false;
+  expect(cloned.has(8)).to.be.true;
+  expect(cloned.has(9)).to.be.false;
+  expect(cloned.has(10)).to.be.true;
+  expect(cloned.has(11)).to.be.false;
 });
-
 
 test("Collection.toRange().size returns the correct size", (coll: Collection<string>) => {
   expect(coll.toRange().size).to.equal(0);

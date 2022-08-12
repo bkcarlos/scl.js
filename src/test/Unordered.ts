@@ -1,4 +1,3 @@
-
 import { expect } from "chai";
 import { Collection } from "../interfaces";
 import { test } from "./_helpers";
@@ -38,4 +37,3 @@ test("Collection.size reports the correct size", (coll: Collection<string>) => {
   expect(coll.size).to.equal(2);
   coll.add("coll");
 });
-

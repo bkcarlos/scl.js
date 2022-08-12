@@ -1,9 +1,9 @@
 language: node_js
 node_js:
-- '15'
-- '14'
-- '12'
-after_success: 'npm run coveralls'
+  - "15"
+  - "14"
+  - "12"
+after_success: "npm run coveralls"
 notifications:
   email:
     on_success: never

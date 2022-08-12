@@ -3,19 +3,17 @@ import RBTreeIndex from "./RBTreeIndex";
 import { TreeDictOptions } from "./TreeDict";
 import { isEqual, isIterable } from "./util";
 
-function parseTreeDictOptions<K, V>(opts: Iterable<[K, V]> | TreeDictOptions<K, V>) {
+function parseTreeDictOptions<K, V>(
+  opts: Iterable<[K, V]> | TreeDictOptions<K, V>
+) {
   if (isIterable(opts)) {
     opts = { elements: opts };
   }
-  const {
-    valuesEqual = isEqual,
-    elements = []
-  } = opts;
+  const { valuesEqual = isEqual, elements = [] } = opts;
   return { valuesEqual, elements };
 }
 
 export class RBTreeDict<K, V> extends DictBase<K, V> {
-
   /**
    * Construct a new tree-based dictionary.
    *
@@ -48,18 +46,17 @@ export class RBTreeDict<K, V> extends DictBase<K, V> {
    *
    * [1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
    */
-  constructor(opts: Iterable<[K, V]> | RBTreeDict<K, V> | TreeDictOptions<K, V> = {}) {
+  constructor(
+    opts: Iterable<[K, V]> | RBTreeDict<K, V> | TreeDictOptions<K, V> = {}
+  ) {
     if (opts instanceof RBTreeDict) {
       super(opts);
     } else {
-      const {
-        elements,
-        valuesEqual
-      } = parseTreeDictOptions(opts);
+      const { elements, valuesEqual } = parseTreeDictOptions(opts);
       super(
         new RBTreeIndex<[K, V], K>({
           elements,
-          getKey: pair => pair[0],
+          getKey: (pair) => pair[0],
           isEqual: (a, b) => valuesEqual(a[1], b[1]),
         })
       );
@@ -69,5 +66,4 @@ export class RBTreeDict<K, V> extends DictBase<K, V> {
   public clone(): RBTreeDict<K, V> {
     return new RBTreeDict<K, V>(this.index.clone());
   }
-
 }
