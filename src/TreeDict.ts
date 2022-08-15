@@ -1,5 +1,6 @@
 import { BSTreeIndexOptions } from "./BSTreeIndex";
 import { RBTreeDict } from "./RBTreeDict";
+import RBTreeIndex from "./RBTreeIndex";
 
 /**
  * Options passed to a tree-like dictionary to configure its behaviour.
@@ -26,6 +27,7 @@ export interface TreeDictOptions<K, V> extends BSTreeIndexOptions<[K, V], K> {
  *
  * ```ts
  * import { TreeDict } from "scl"
+import { SortedIndex } from './interfaces';
  * ```
  *
  * The following table summarises the worst-case time complexity of the most
@@ -72,6 +74,60 @@ export interface TreeDictOptions<K, V> extends BSTreeIndexOptions<[K, V], K> {
  * @typeparam K The type of key of a given entry.
  * @typeparam V The type of value associated with the given key.
  */
-export class TreeDict<K, V> extends RBTreeDict<K, V> {}
+export class TreeDict<K, V> extends RBTreeDict<K, V> {
+  constructor() {
+    super();
+  }
+
+  getLowerBound(key: K) {
+    if (this.index instanceof RBTreeIndex) {
+      const greatestLowerBound = this.index.getGreatestLowerBound(key);
+      if (greatestLowerBound?.value[0] === key) {
+        // console.log("getLowerBound", key);
+        if (greatestLowerBound.left === null) {
+          return greatestLowerBound.parent?.parent;
+        }
+        return greatestLowerBound.left;
+      }
+
+      return greatestLowerBound;
+    }
+
+    return null;
+  }
+
+  getUpperBound(key: K) {
+    if (this.index instanceof RBTreeIndex) {
+      const leastUpperBound = this.index.getLeastUpperBound(key);
+      if (leastUpperBound?.value[0] === key) {
+        // console.log("getUpperBound", key);
+        if (leastUpperBound.right === null) {
+          return leastUpperBound.parent;
+        }
+
+        return leastUpperBound;
+      }
+
+      return leastUpperBound;
+    }
+
+    return null;
+  }
+
+  getGreatestLowerBound(key: K) {
+    if (this.index instanceof RBTreeIndex) {
+      return this.index.getGreatestLowerBound(key);
+    }
+
+    return null;
+  }
+  getLeastUpperBound(key: K) {
+    if (this.index instanceof RBTreeIndex) {
+      return this.index.getLeastUpperBound(key);
+    }
+
+    return null;
+  }
+}
 
 export default TreeDict;
